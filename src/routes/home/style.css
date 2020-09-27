@@ -1,0 +1,17 @@
+.home {
+	padding: 56px 20px;
+	min-height: 100%;
+	width: 100%;
+}
+
+table {
+width: 100%;
+}
+
+td, th {
+	text-align: left;
+}
+
+.button {
+	padding-top: 80px;
+}
