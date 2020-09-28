@@ -1,6 +1,10 @@
-import style from './style.css';
-import {Component, createRef} from "preact";
+import style from './style.scss';
+import {Component} from "preact";
 import dateformat from "dateformat";
+import {
+	isValidRun
+} from "../../helper/functions";
+import {CompareStatView} from "../../components/comparestat"
 
 class Home extends Component {
 	constructor() {
@@ -37,16 +41,8 @@ class Home extends Component {
 		this.setState({runs: json});
 	}
 
-	calcPace = (distance, duration) => {
-		const [seconds, minutes, hours] = duration.split(":").reverse().map(Number);
-		const totalMinutes = (hours || 0) * 60 + minutes + seconds / 60;
-		const pace = totalMinutes / distance;
-
-		return pace.toFixed(2);
-	}
-
 	async insertRun(newRun) {
-		if (!newRun.distance || !newRun.duration) return;
+		if (!isValidRun(newRun)) return;
 
 		let formData = new FormData();
 		formData.append('date', dateformat(new Date(), 'yyyy-mm-dd HH:MM:ss'));
@@ -63,21 +59,6 @@ class Home extends Component {
 		this.setState({runs: json });
 	}
 
-	async deleteRun(date) {
-		let formData = new FormData();
-		formData.append('date', date);
-
-		await fetch('http://192.168.188.44:5001/api/run/delete', {
-			method: "post",
-			body: formData
-		})
-
-		const response = await fetch(`http://192.168.188.44:5001/api/run/read`);
-		const json = await response.json();
-		this.setState({runs: json });
-	}
-
-
 	render() {
 		return <>
 			<div class={style.button}>
@@ -93,35 +74,7 @@ class Home extends Component {
 					this.insertRun(this.state.newRun)
 				}}>INSERT</button>
 			</div>
-			<div class={style.home}>
-				<table>
-					<thead>
-					<tr>
-						<th>Nr.</th>
-						<th>Datum</th>
-						<th>Strecke</th>
-						<th>Dauer</th>
-						<th>Pace</th>
-						<th>Kalorien</th>
-					</tr>
-					</thead>
-					<tbody>
-					{this.state.runs.map((data, index) => {
-						return <><tr>
-							<td>{index + 1}</td>
-							<td>{data[0]}</td>
-							<td>{data[1]}</td>
-							<td>{data[2]}</td>
-							<td>{data[3]}</td>
-							<td>{data[4]}</td>
-							<td onclick={() => {
-								this.deleteRun(data[0])
-							}}>X</td>
-						</tr></>;
-					})}
-					</tbody>
-				</table>
-			</div>
+			<CompareStatView runs={this.state.runs} />
 		</>;
 	}
 }
