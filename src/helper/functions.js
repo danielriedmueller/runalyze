@@ -92,11 +92,15 @@ export const getRunsBetween = (runs, range, deviation = 0) => runs.filter((run) 
     return date.isAfter(dateRange[0]) && date.isBefore(dateRange[1]);
 });
 
-export const calcPace = (distance, duration) => new Pacer()
-    .withLength(new Length(distance, 'km'))
-    .withTime(new Timespan()
-        .addHours(duration.get('hours'))
-        .addMinutes(duration.get('minutes'))
-        .addSeconds(duration.get('seconds'))
-    )
-    .toPaceUnit('min/km').toString()
+export const calcPace = (distance, duration) => {
+    if (!distance || !duration) return null;
+
+    return new Pacer()
+        .withLength(new Length(distance, 'km'))
+        .withTime(new Timespan()
+            .addHours(duration.get('hours'))
+            .addMinutes(duration.get('minutes'))
+            .addSeconds(duration.get('seconds'))
+        )
+        .toPaceUnit('min/km').toString()
+}
