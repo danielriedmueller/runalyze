@@ -1,13 +1,13 @@
 import style from './style.scss';
 import {Component} from "preact";
 import {Stat} from "../../components/comparestat"
-import {combineRuns, getRunsBetween} from "../../helper/functions";
+import {combineRuns, findFastestRun, findFurthestRun, findLongestRun, getRunsBetween} from "../../helper/functions";
 import dayjs from "dayjs";
 
 function Legend() {
 	return <>
 		<div></div>
-		<div>Läufe</div>
+		<div>Datum / # Läufe</div>
 		<div>Pace (min/km)</div>
 		<div>Strecke (km)</div>
 		<div>Dauer</div>
@@ -19,11 +19,23 @@ class Home extends Component {
 		return <div class={style.home}>
 			<Legend />
 			<Stat
-				label={props.runs[0].date.format('dddd HH:mm:ss')}
+				label={"Weitester"}
+				run={findFurthestRun(props.runs)}
+			/>
+			<Stat
+				label={"Längster"}
+				run={findLongestRun(props.runs)}
+			/>
+			<Stat
+				label={"Schnellster"}
+				run={findFastestRun(props.runs)}
+			/>
+			<Stat
+				label={"Letzter"}
 				run={props.runs[0]}
 			/>
 			<Stat
-				label={props.runs[1].date.format('dddd HH:mm:ss')}
+				label={"Vorletzter"}
 				run={props.runs[1]}
 			/>
 			<Stat

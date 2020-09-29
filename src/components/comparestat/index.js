@@ -5,9 +5,9 @@ export function Stat(props) {
         return <>
             <div>{props.label}</div>
             <div>0</div>
-            <div>&empty;</div>
-            <div>&empty;</div>
-            <div>&empty;</div>
+            <div>-</div>
+            <div>-</div>
+            <div>-</div>
         </>;
     }
 
@@ -26,7 +26,7 @@ export function Stat(props) {
 
 function StatAttr(props) {
     return <>
-        <div></div>
+        <div>{props.run.date.format('dddd, YYYY-MM-DD HH:mm:ss')}</div>
         <div>{calcPace(props.run.distance, props.run.duration)}</div>
         <div>{props.run.distance}</div>
         <div>{durationToString(props.run.duration)}</div>
@@ -39,11 +39,11 @@ function StatAttrAvg(props) {
         <div>{calcPace(props.run.distance, props.run.duration)}</div>
         <div>
             <div>{props.run.distance}</div>
-            <div>{props.run.avgDistance}</div>
+            <div>&empty; {props.run.avgDistance}</div>
         </div>
         <div>
             <div>{durationToString(props.run.duration)}</div>
-            <div>{durationToString(props.run.avgDuration)}</div>
+            <div>&empty; {durationToString(props.run.avgDuration)}</div>
         </div>
     </>;
 }
