@@ -1,14 +1,9 @@
 import {calcPace, durationToString} from "../../helper/functions";
 
-export function CompareStat(props) {
-    if (!props.currentRun || !props.lastRun) {
+export function Stat(props) {
+    if (!props.run) {
         return <>
-            <div>{props.labelCurrent}</div>
-            <div>0</div>
-            <div>&empty;</div>
-            <div>&empty;</div>
-            <div>&empty;</div>
-            <div>{props.labelLast}</div>
+            <div>{props.label}</div>
             <div>0</div>
             <div>&empty;</div>
             <div>&empty;</div>
@@ -16,39 +11,32 @@ export function CompareStat(props) {
         </>;
     }
 
-    if (props.currentRun.runs) {
+    if (props.run.runs) {
         return <>
-            <div>{props.labelCurrent}</div>
-            <CompareStatAttrAvg run={props.currentRun} />
-            <div>{props.labelLast}</div>
-            <CompareStatAttrAvg run={props.lastRun} />
+            <div>{props.label}</div>
+            <StatAttrAvg run={props.run} />
         </>;
     }
 
     return <>
-        <div>{props.labelCurrent}</div>
-        <CompareStatAttr run={props.currentRun} />
-        <div>{props.labelLast}</div>
-        <CompareStatAttr run={props.lastRun} />
+        <div>{props.label}</div>
+        <StatAttr run={props.run} />
     </>;
 }
 
-function CompareStatAttr(props) {
+function StatAttr(props) {
     return <>
-        <div>1</div>
+        <div></div>
         <div>{calcPace(props.run.distance, props.run.duration)}</div>
         <div>{props.run.distance}</div>
         <div>{durationToString(props.run.duration)}</div>
     </>;
 }
 
-function CompareStatAttrAvg(props) {
+function StatAttrAvg(props) {
     return <>
         <div>{props.run.runs ?? 1}</div>
-        <div>
-            <div>{calcPace(props.run.avgDistance, props.run.avgDuration)}</div>
-            <div>{calcPace(props.run.distance, props.run.duration)}</div>
-        </div>
+        <div>{calcPace(props.run.distance, props.run.duration)}</div>
         <div>
             <div>{props.run.distance}</div>
             <div>{props.run.avgDistance}</div>
