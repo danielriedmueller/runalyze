@@ -3,4 +3,12 @@
   margin: 8px;
   display: grid;
   grid-template-columns: 120px 1fr 1fr 1fr 1fr;
+
+  > div {
+    padding: 8px;
+    border: 1px dotted red;
+    border-bottom: none;
+    border-right: none;
+    z-index: 999;
+  }
 }

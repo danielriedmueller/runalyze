@@ -5,7 +5,7 @@ import {Pacer, Length, Timespan} from "fitness-js";
 export const jsonToRuns = (json) => json.map((jsonRun) => {
     return {
         date: dayjs(jsonRun[0]),
-        distance: jsonRun[1],
+        distance: parseFloat(jsonRun[1]),
         duration: stringToDuration(jsonRun[2])
     }
 })
@@ -85,6 +85,15 @@ export const getRunsBetween = (runs, range, deviation = 0) => runs.filter((run) 
     const dateRange = getDateRange(range, deviation);
     return run.date.isAfter(dateRange[0]) && run.date.isBefore(dateRange[1]);
 });
+
+export const findFastestRun = (runs) => runs.reduce((prev, current) => {
+    const durationA = stringToDuration(calcPace(prev.distance, prev.duration));
+    const durationB = stringToDuration(calcPace(current.distance, current.duration));
+    return (durationA.asMilliseconds() < durationB.asMilliseconds()) ? prev : current
+});
+export const findLongestRun = (runs) => runs.reduce((prev, current) => (prev.duration.asMilliseconds() > current.duration.asMilliseconds()) ? prev : current);
+
+export const findFurthestRun = (runs) => runs.reduce((prev, current) => (prev.distance > current.distance) ? prev : current);
 
 export const calcPace = (distance, duration) => new Pacer()
     .withLength(new Length(distance, 'km'))
