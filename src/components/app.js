@@ -67,7 +67,7 @@ class App extends Component {
 
 	async deleteRun(date) {
 		let formData = new FormData();
-		formData.append('date', date);
+		formData.append('date', date.format(process.env.PREACT_APP_DB_DATE_FORMAT));
 
 		await fetch(process.env.PREACT_APP_API_DELETE_RUN, {
 			method: "post",
