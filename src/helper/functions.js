@@ -1,12 +1,10 @@
 import dayjs from "dayjs";
-import duration from "dayjs/plugin/duration";
 
-dayjs.extend(duration);
 import {Pacer, Length, Timespan} from "fitness-js";
 
 export const jsonToRuns = (json) => json.map((jsonRun) => {
     return {
-        date: jsonRun[0],
+        date: dayjs(jsonRun[0]),
         distance: jsonRun[1],
         duration: stringToDuration(jsonRun[2])
     }
@@ -46,20 +44,11 @@ export const stringToDuration = (str) => {
     });
 }
 
-export const durationToString = (duration) => {
-    if (!duration) return "";
-
-    return duration.get('hours') + ":" + duration.get('minutes') + ":" + duration.get('seconds')
-}
+export const durationToString = (duration) =>
+    duration.get('hours') + ":" + duration.get('minutes') + ":" + duration.get('seconds')
 
 export const combineRuns = (runs) => {
-    if (runs.length === 0) {
-        return {
-            runs: 0,
-            distance: 0,
-            duration: stringToDuration("0:0")
-        };
-    }
+    if (runs.length === 0) return null;
 
     let duration = dayjs.duration({
         seconds: 0,
@@ -76,8 +65,8 @@ export const combineRuns = (runs) => {
 
     return {
         runs: runs.length,
-        distance: distance,
-        avgDistance: distance / runs.length,
+        distance: distance.toFixed(2),
+        avgDistance: (distance / runs.length).toFixed(2),
         duration: duration,
         avgDuration: dayjs.duration(duration.asMilliseconds() /  runs.length)
     };
@@ -94,19 +83,10 @@ export const getDateRange = (range, deviation = 0) => {
 
 export const getRunsBetween = (runs, range, deviation = 0) => runs.filter((run) => {
     const dateRange = getDateRange(range, deviation);
-    const date = dayjs(run.date);
-    return date.isAfter(dateRange[0]) && date.isBefore(dateRange[1]);
+    return run.date.isAfter(dateRange[0]) && run.date.isBefore(dateRange[1]);
 });
 
-export const calcPace = (distance, duration) => {
-    if (!distance || !duration) return null;
-
-    return new Pacer()
-        .withLength(new Length(distance, 'km'))
-        .withTime(new Timespan()
-            .addHours(duration.get('hours'))
-            .addMinutes(duration.get('minutes'))
-            .addSeconds(duration.get('seconds'))
-        )
-        .toPaceUnit('min/km').toString()
-}
+export const calcPace = (distance, duration) => new Pacer()
+    .withLength(new Length(distance, 'km'))
+    .withTime(new Timespan().addMilliseconds(duration.asMilliseconds()))
+    .toPaceUnit('min/km').toString();

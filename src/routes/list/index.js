@@ -1,7 +1,6 @@
 import style from './style.scss';
 import {Component} from "preact";
 import RunStat from "../../components/runstat"
-import {calcPace, stringToDuration} from "../../helper/functions";
 
 class List extends Component {
 	render(props) {

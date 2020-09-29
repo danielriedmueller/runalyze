@@ -1,8 +1,30 @@
-import style from './style.scss';
-import {calcPace, combineRuns, durationToString, getAvgFromRuns, getRunsBetween} from "../../helper/functions";
-import dayjs from "dayjs";
+import {calcPace, durationToString} from "../../helper/functions";
 
 export function CompareStat(props) {
+    if (!props.currentRun || !props.lastRun) {
+        return <>
+            <div>{props.labelCurrent}</div>
+            <div>0</div>
+            <div>&empty;</div>
+            <div>&empty;</div>
+            <div>&empty;</div>
+            <div>{props.labelLast}</div>
+            <div>0</div>
+            <div>&empty;</div>
+            <div>&empty;</div>
+            <div>&empty;</div>
+        </>;
+    }
+
+    if (props.currentRun.runs) {
+        return <>
+            <div>{props.labelCurrent}</div>
+            <CompareStatAttrAvg run={props.currentRun} />
+            <div>{props.labelLast}</div>
+            <CompareStatAttrAvg run={props.lastRun} />
+        </>;
+    }
+
     return <>
         <div>{props.labelCurrent}</div>
         <CompareStatAttr run={props.currentRun} />
@@ -13,8 +35,20 @@ export function CompareStat(props) {
 
 function CompareStatAttr(props) {
     return <>
-        <div>{'runs' in props.run ?? props.runs.run}</div>
-        <div>{calcPace(props.run.avgDistance, props.run.avgDuration)}</div>
+        <div>1</div>
+        <div>{calcPace(props.run.distance, props.run.duration)}</div>
+        <div>{props.run.distance}</div>
+        <div>{durationToString(props.run.duration)}</div>
+    </>;
+}
+
+function CompareStatAttrAvg(props) {
+    return <>
+        <div>{props.run.runs ?? 1}</div>
+        <div>
+            <div>{calcPace(props.run.avgDistance, props.run.avgDuration)}</div>
+            <div>{calcPace(props.run.distance, props.run.duration)}</div>
+        </div>
         <div>
             <div>{props.run.distance}</div>
             <div>{props.run.avgDistance}</div>
@@ -24,44 +58,4 @@ function CompareStatAttr(props) {
             <div>{durationToString(props.run.avgDuration)}</div>
         </div>
     </>;
-}
-
-function Legend() {
-    return <>
-            <div></div>
-            <div>Läufe</div>
-            <div>Pace (min/km)</div>
-            <div>Strecke (km)</div>
-            <div>Dauer</div>
-        </>
-}
-
-export function CompareStatView(props) {
-    return <div class={style.compareStatView}>
-        <Legend />
-        <CompareStat
-            labelCurrent={"Diese Woche"}
-            labelLast={"Letzte Woche"}
-            currentRun={props.runs[0]}
-            lastRun={props.runs[1]}
-        />
-        <CompareStat
-            labelCurrent={"Diese Woche"}
-            labelLast={"Letzte Woche"}
-            currentRun={combineRuns(getRunsBetween(props.runs, 'week'))}
-            lastRun={combineRuns(getRunsBetween(props.runs, 'week', '-1'))}
-        />
-        <CompareStat
-            labelCurrent={dayjs().format('MMMM')}
-            labelLast={dayjs().subtract(1, 'month').format('MMMM')}
-            currentRun={combineRuns(getRunsBetween(props.runs, 'month'))}
-            lastRun={combineRuns(getRunsBetween(props.runs, 'month', '-1'))}
-        />
-        <CompareStat
-            labelCurrent={dayjs().get('year')}
-            labelLast={dayjs().subtract(1, 'year').get('year')}
-            currentRun={combineRuns(getRunsBetween(props.runs, 'year'))}
-            lastRun={combineRuns(getRunsBetween(props.runs, 'year', '-1'))}
-        />
-    </div>
 }
