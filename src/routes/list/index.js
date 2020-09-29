@@ -9,19 +9,14 @@ class List extends Component {
 			<div class={style.list}>
 				<table>
 					<tbody>
-					{props.runs.map((data, index) => {
+					{props.runs.map((run, index) => {
 						return <><tr>
 							<td>{index + 1}</td>
 							<td>
-								<RunStat
-									date={data[0]}
-									distance={data[1]}
-									duration={stringToDuration(data[2])}
-									calories={data[4]}
-								/>
+								<RunStat run={run}/>
 							</td>
 							<td onclick={() => {
-								props.deleteRun(data[0])
+								props.deleteRun(run.date)
 							}}>X</td>
 						</tr></>;
 					})}

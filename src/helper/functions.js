@@ -4,6 +4,14 @@ import duration from "dayjs/plugin/duration";
 dayjs.extend(duration);
 import {Pacer, Length, Timespan} from "fitness-js";
 
+export const jsonToRuns = (json) => json.map((jsonRun) => {
+    return {
+        date: jsonRun[0],
+        distance: jsonRun[1],
+        duration: stringToDuration(jsonRun[2])
+    }
+})
+
 export const isValidRun = (newRun) => {
     let code, i, len;
 
@@ -29,15 +37,13 @@ export const isValidRun = (newRun) => {
     return true;
 }
 
-export const stringToDuration = (str, duration = null) => {
+export const stringToDuration = (str) => {
     let [seconds, minutes, hours] = str.split(":").reverse();
-    const data = {
+    return dayjs.duration({
         seconds: seconds || 0,
         minutes: minutes || 0,
         hours: hours || 0
-    };
-
-    return duration ? duration.add(data) : dayjs.duration(data)
+    });
 }
 
 export const durationToString = (duration) => {
@@ -64,8 +70,8 @@ export const combineRuns = (runs) => {
     let distance = 0;
 
     runs.forEach((run) => {
-        distance += parseFloat(run[1]);
-        duration = stringToDuration(run[2], duration);
+        distance += parseFloat(run.distance);
+        duration = duration.add(run.duration);
     })
 
     return {
@@ -88,7 +94,7 @@ export const getDateRange = (range, deviation = 0) => {
 
 export const getRunsBetween = (runs, range, deviation = 0) => runs.filter((run) => {
     const dateRange = getDateRange(range, deviation);
-    const date = dayjs(run[0]);
+    const date = dayjs(run.date);
     return date.isAfter(dateRange[0]) && date.isBefore(dateRange[1]);
 });
 

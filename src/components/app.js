@@ -6,7 +6,7 @@ import Header from './header';
 import Home from '../routes/home';
 import List from '../routes/list';
 import {Component} from "preact";
-import {isValidRun} from "../helper/functions";
+import {isValidRun, jsonToRuns} from "../helper/functions";
 import dateformat from "dateformat";
 import style from "../routes/home/style.scss";
 
@@ -15,7 +15,6 @@ class App extends Component {
 		super();
 
 		this.state = {
-			runs: [],
 			newRun: {
 				distance: null,
 				duration: null
@@ -24,6 +23,16 @@ class App extends Component {
 
 		this.newRun = this.newRun.bind(this);
 		this.deleteRun = this.deleteRun.bind(this);
+	}
+
+	async componentDidMount() {
+		await this.fetchRuns();
+	}
+
+	async fetchRuns() {
+		const response = await fetch(process.env.PREACT_APP_API_GET_RUNS);
+		const json = await response.json();
+		this.setState({runs: jsonToRuns(json)});
 	}
 
 	newRun(event) {
@@ -48,37 +57,29 @@ class App extends Component {
 		formData.append('distance', newRun.distance);
 		formData.append('duration', newRun.duration);
 
-		await fetch('http://192.168.188.44:5001/api/run/insert', {
+		await fetch(process.env.PREACT_APP_API_INSERT_RUN, {
 			method: "post",
 			body: formData
 		})
 
-		const response = await fetch(`http://192.168.188.44:5001/api/run/read`);
-		const json = await response.json();
-		this.setState({runs: json });
+		await this.fetchRuns();
 	}
 
 	async deleteRun(date) {
 		let formData = new FormData();
 		formData.append('date', date);
 
-		await fetch('http://192.168.188.44:5001/api/run/delete', {
+		await fetch(process.env.PREACT_APP_API_DELETE_RUN, {
 			method: "post",
 			body: formData
 		})
 
-		const response = await fetch(`http://192.168.188.44:5001/api/run/read`);
-		const json = await response.json();
-		this.setState({runs: json });
-	}
-
-	async componentDidMount() {
-		const response = await fetch(`http://192.168.188.44:5001/api/run/read`);
-		const json = await response.json();
-		this.setState({runs: json});
+		await this.fetchRuns();
 	}
 
 	render() {
+		if (!this.state.runs) return null;
+
 		return <div id="app">
 			<Header />
 			<div class={style.button}>

@@ -1,5 +1,4 @@
 import style from './style.scss';
-import RunStat from "../../components/runstat"
 import {calcPace, combineRuns, durationToString, getAvgFromRuns, getRunsBetween} from "../../helper/functions";
 import dayjs from "dayjs";
 
