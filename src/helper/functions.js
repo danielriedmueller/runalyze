@@ -29,13 +29,31 @@ export const isValidRun = (newRun) => {
     return true;
 }
 
-export const combineRuns = (runs) => {
-    if (runs.length === 0) return {};
+export const stringToDuration = (str, duration = null) => {
+    let [seconds, minutes, hours] = str.split(":").reverse();
+    const data = {
+        seconds: seconds || 0,
+        minutes: minutes || 0,
+        hours: hours || 0
+    };
 
-    let pace = dayjs.duration({
-        seconds: 0,
-        minutes: 0
-    });
+    return duration ? duration.add(data) : dayjs.duration(data)
+}
+
+export const durationToString = (duration) => {
+    if (!duration) return "";
+
+    return duration.get('hours') + ":" + duration.get('minutes') + ":" + duration.get('seconds')
+}
+
+export const combineRuns = (runs) => {
+    if (runs.length === 0) {
+        return {
+            runs: 0,
+            distance: 0,
+            duration: stringToDuration("0:0")
+        };
+    }
 
     let duration = dayjs.duration({
         seconds: 0,
@@ -44,40 +62,18 @@ export const combineRuns = (runs) => {
     });
 
     let distance = 0;
-    let calories = 0;
 
     runs.forEach((run) => {
         distance += parseFloat(run[1]);
-        calories += parseInt(run[4]);
-
-        let [minutes, seconds] = run[3].split(":");
-        pace = pace.add({
-            seconds: seconds,
-            minutes: minutes
-        });
-
-        [minutes, seconds] = run[2].split(":");
-        duration = duration.add({
-            seconds: seconds,
-            minutes: minutes
-        });
+        duration = stringToDuration(run[2], duration);
     })
-
-    const paceStr = new Pacer()
-        .withLength(new Length(distance, 'km'))
-        .withTime(new Timespan()
-            .addHours(duration.get('hours'))
-            .addMinutes(duration.get('minutes'))
-            .addSeconds(duration.get('seconds'))
-        )
-        .toPaceUnit('min/km').toString();
 
     return {
         runs: runs.length,
         distance: distance,
-        duration: duration.get('hours') + ":" + duration.get('minutes') + ":" + duration.get('seconds'),
-        pace: paceStr,
-        calories: calories
+        avgDistance: distance / runs.length,
+        duration: duration,
+        avgDuration: dayjs.duration(duration.asMilliseconds() /  runs.length)
     };
 }
 
@@ -95,3 +91,12 @@ export const getRunsBetween = (runs, range, deviation = 0) => runs.filter((run) 
     const date = dayjs(run[0]);
     return date.isAfter(dateRange[0]) && date.isBefore(dateRange[1]);
 });
+
+export const calcPace = (distance, duration) => new Pacer()
+    .withLength(new Length(distance, 'km'))
+    .withTime(new Timespan()
+        .addHours(duration.get('hours'))
+        .addMinutes(duration.get('minutes'))
+        .addSeconds(duration.get('seconds'))
+    )
+    .toPaceUnit('min/km').toString()
