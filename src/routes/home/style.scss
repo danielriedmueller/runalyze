@@ -1,14 +1,19 @@
 .home {
-  padding: 8px;
-  margin: 8px;
   display: grid;
   grid-template-columns: 120px 1fr 1fr 1fr 1fr;
 
+  div.legend {
+    background-color: #444444;
+    color: #fafafa;
+    border-color: #fafafa;
+  }
+
   > div {
     padding: 8px;
-    border: 1px dotted red;
+    border: 1px solid #444444;
     border-bottom: none;
-    border-right: none;
+    border-left: none;
     z-index: 999;
+    text-align: center;
   }
 }
