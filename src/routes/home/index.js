@@ -6,11 +6,11 @@ import dayjs from "dayjs";
 
 function Legend() {
 	return <>
-		<div></div>
-		<div>Datum / # Läufe</div>
-		<div>Pace (min/km)</div>
-		<div>Strecke (km)</div>
-		<div>Dauer</div>
+		<div class={style.legend}></div>
+		<div class={style.legend}>Datum / # Läufe</div>
+		<div class={style.legend}>Pace (min/km)</div>
+		<div class={style.legend}>Strecke (km)</div>
+		<div class={style.legend}>Dauer</div>
 	</>
 }
 
