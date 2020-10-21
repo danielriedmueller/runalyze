@@ -3,7 +3,6 @@ import style from './style.scss';
 export function NewRunInput(props) {
     return <div class={style.newRun}>
         <label>
-            Strecke
             <input
                 name="distanceInput"
                 value={props.newRun.distance || "0.0"}
@@ -12,7 +11,6 @@ export function NewRunInput(props) {
             />
         </label>
         <label>
-            Dauer
             <input
                 name="durationInput"
                 value={props.newRun.duration || "00:00"}
@@ -22,6 +20,6 @@ export function NewRunInput(props) {
         </label>
         <button onclick={() => {
             props.onInsert(props.newRun)
-        }}>INSERT</button>
+        }} />
     </div>;
 }
