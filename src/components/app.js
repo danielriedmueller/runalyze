@@ -2,13 +2,13 @@ import { Router } from 'preact-router';
 
 import Header from './header';
 
-// Code-splitting is automated for `routes` directory
 import Home from '../routes/home';
 import List from '../routes/list';
 import {Component} from "preact";
 import {isValidRun, jsonToRuns} from "../helper/functions";
 import dateformat from "dateformat";
 import style from "../routes/home/style.scss";
+import LineChart from "./chart";
 
 class App extends Component {
 	constructor() {
@@ -54,7 +54,7 @@ class App extends Component {
 
 		let formData = new FormData();
 		formData.append('date', dateformat(new Date(), 'yyyy-mm-dd HH:MM:ss'));
-		formData.append('distance', newRun.distance);
+		formData.append('distance', String(newRun.distance));
 		formData.append('duration', newRun.duration);
 
 		await fetch(process.env.PREACT_APP_API_INSERT_RUN, {
@@ -82,14 +82,25 @@ class App extends Component {
 
 		return <div id="app">
 			<Header />
-			<div class={style.button}>
+			<LineChart runs={this.state.runs.slice(0, 100).reverse()} />
+			<div class={style.newRun}>
 				<label>
 					Strecke
-					<input name="distanceInput" value={this.state.newRun.distance} onChange={this.newRun} type="text"/>
+					<input
+						name="distanceInput"
+						value={this.state.newRun.distance || "0.0"}
+						onChange={this.newRun}
+						type="number"
+					/>
 				</label>
 				<label>
 					Dauer
-					<input name="durationInput" value={this.state.newRun.duration} onChange={this.newRun} type="text"/>
+					<input
+						name="durationInput"
+						value={this.state.newRun.duration || "00:00"}
+						onChange={this.newRun}
+						type="text"
+					/>
 				</label>
 				<button onclick={() => {
 					this.insertRun(this.state.newRun)

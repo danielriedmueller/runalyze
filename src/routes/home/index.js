@@ -19,6 +19,14 @@ class Home extends Component {
 		return <div class={style.home}>
 			<Legend />
 			<Stat
+				label={"Letzter"}
+				run={props.runs[0]}
+			/>
+			<Stat
+				label={"Vorletzter"}
+				run={props.runs[1]}
+			/>
+			<Stat
 				label={"Weitester"}
 				run={findFurthestRun(props.runs)}
 			/>
@@ -29,14 +37,6 @@ class Home extends Component {
 			<Stat
 				label={"Schnellster"}
 				run={findFastestRun(props.runs)}
-			/>
-			<Stat
-				label={"Letzter"}
-				run={props.runs[0]}
-			/>
-			<Stat
-				label={"Vorletzter"}
-				run={props.runs[1]}
 			/>
 			<Stat
 				label={"Diese Woche"}
