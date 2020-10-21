@@ -1,0 +1,20 @@
+@import "../../assets/settings";
+
+.newRun {
+  background-color: $blue-dark;
+  padding: $spacing-s;
+
+  label {
+    display: block;
+
+
+    &:not(:last-child) {
+      margin-bottom: 10px;
+    }
+
+    input {
+      margin-left: 10px;
+      width: 75px;
+    }
+  }
+}

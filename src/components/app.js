@@ -9,6 +9,7 @@ import {isValidRun, jsonToRuns} from "../helper/functions";
 import dateformat from "dateformat";
 import style from "../routes/home/style.scss";
 import LineChart from "./chart";
+import {NewRunInput} from "./input";
 
 class App extends Component {
 	constructor() {
@@ -21,8 +22,9 @@ class App extends Component {
 			}
 		};
 
-		this.newRun = this.newRun.bind(this);
 		this.deleteRun = this.deleteRun.bind(this);
+		this.onChange = this.onChange.bind(this);
+		this.insertRun = this.insertRun.bind(this);
 	}
 
 	async componentDidMount() {
@@ -35,7 +37,7 @@ class App extends Component {
 		this.setState({runs: jsonToRuns(json)});
 	}
 
-	newRun(event) {
+	onChange(event) {
 		let newRun = {};
 		if (event.target.name === "distanceInput") {
 			newRun.distance = event.target.value;
@@ -82,30 +84,11 @@ class App extends Component {
 
 		return <div id="app">
 			<Header />
-			<LineChart runs={this.state.runs.slice(0, 100).reverse()} />
-			<div class={style.newRun}>
-				<label>
-					Strecke
-					<input
-						name="distanceInput"
-						value={this.state.newRun.distance || "0.0"}
-						onChange={this.newRun}
-						type="number"
-					/>
-				</label>
-				<label>
-					Dauer
-					<input
-						name="durationInput"
-						value={this.state.newRun.duration || "00:00"}
-						onChange={this.newRun}
-						type="text"
-					/>
-				</label>
-				<button onclick={() => {
-					this.insertRun(this.state.newRun)
-				}}>INSERT</button>
-			</div>
+			<NewRunInput
+				newRun={this.state.newRun}
+				onChange={this.onChange}
+				onInsert={this.insertRun}
+			/>
 			<Router>
 				<Home path="/" runs={this.state.runs} />
 				<List path="/list" runs={this.state.runs} deleteRun={this.deleteRun} />
