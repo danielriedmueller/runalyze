@@ -1,4 +1,4 @@
-import style from './style.scss';
+import style from './style.css';
 import {calcPace, durationToString} from "../../helper/functions";
 
 export default function Index(props) {

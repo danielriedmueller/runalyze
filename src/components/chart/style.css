@@ -1,0 +1,19 @@
+.chart {
+  padding: 5px;
+  user-select: none;
+}
+
+.chart .linechart_path {
+  stroke-width: 0.6;
+  fill: none;
+  stroke: #fff;
+}
+
+.chart .linechart_axis {
+  stroke: #fff;
+}
+
+.chart text {
+  font-size: 10px;
+  stroke: #fff;
+}

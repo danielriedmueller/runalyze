@@ -1,4 +1,4 @@
-import style from './style.scss';
+import style from './style.css';
 import {Component} from "preact";
 import {Table} from "../../components/table";
 import LineChart from "../../components/chart";

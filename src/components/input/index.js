@@ -1,4 +1,4 @@
-import style from './style.scss';
+import style from './style.css';
 
 export function NewRunInput(props) {
     return <div class={style.newRun}>

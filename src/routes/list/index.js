@@ -1,4 +1,4 @@
-import style from './style.scss';
+import style from './style.css';
 import {Component} from "preact";
 import RunStat from "../../components/runstat"
 

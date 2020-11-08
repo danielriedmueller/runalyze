@@ -1,4 +1,4 @@
-import style from './style.scss';
+import style from './style.css';
 import {Stat} from "../comparestat";
 import {combineRuns, findFastestRun, findFurthestRun, findLongestRun, getRunsBetween} from "../../helper/functions";
 import dayjs from "dayjs";
