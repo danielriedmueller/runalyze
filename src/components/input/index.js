@@ -5,17 +5,19 @@ export function NewRunInput(props) {
         <label>
             <input
                 name="distanceInput"
-                value={props.newRun.distance || "0.0"}
+                value={props.newRun.distance}
                 onChange={props.onChange}
                 type="number"
+                placeholder={"0.0"}
             />
         </label>
         <label>
             <input
                 name="durationInput"
-                value={props.newRun.duration || "00:00"}
+                value={props.newRun.duration}
                 onChange={props.onChange}
                 type="text"
+                placeholder={"00:00"}
             />
         </label>
         <button onclick={() => {
