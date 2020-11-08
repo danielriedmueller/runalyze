@@ -36,7 +36,8 @@ export const isValidRun = (newRun) => {
 }
 
 export const stringToDuration = (str) => {
-    let [seconds, minutes, hours] = str.split(":").reverse();
+    let [seconds, minutes, hours] = str.split(":").reverse().map((str) => parseInt(str));
+
     return dayjs.duration({
         seconds: seconds || 0,
         minutes: minutes || 0,
@@ -44,18 +45,12 @@ export const stringToDuration = (str) => {
     });
 }
 
-export const durationToString = (duration) =>
-    duration.get('hours') + ":" + duration.get('minutes') + ":" + duration.get('seconds')
+export const durationToString = (duration) => Math.floor(duration.asHours()) + ":" + duration.minutes() + ":" + duration.seconds();
 
 export const combineRuns = (runs) => {
     if (runs.length === 0) return null;
 
-    let duration = dayjs.duration({
-        seconds: 0,
-        minutes: 0,
-        hours: 0
-    });
-
+    let duration = dayjs.duration({'hours': 10});
     let distance = 0;
 
     runs.forEach((run) => {
