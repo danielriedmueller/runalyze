@@ -1,7 +1,4 @@
 .newRun {
-    background-color: var(--blue-dark);
-    padding: var(--spacing-s);
-    border-bottom: 2px dashed var(--creme);
     display: flex;
     align-items: flex-end;
     flex-direction: column;

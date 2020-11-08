@@ -1,12 +1,13 @@
 .chart {
   padding: 5px;
   user-select: none;
+  background-color: #fff;
 }
 
 .chart .linechart_path {
-  stroke-width: 0.6;
+  stroke-width: 1;
   fill: none;
-  stroke: #fff;
+  stroke: var(--red);
 }
 
 .chart .linechart_axis {

@@ -7,7 +7,7 @@ import List from '../routes/list';
 import {Component} from "preact";
 import {isValidRun, jsonToRuns} from "../helper/functions";
 import dateformat from "dateformat";
-import {NewRunInput} from "./input";
+import {Subheader} from "./subheader";
 
 class App extends Component {
 	constructor() {
@@ -82,7 +82,8 @@ class App extends Component {
 
 		return <div id="app">
 			<Header />
-			<NewRunInput
+			<Subheader
+				currentRun={this.state.runs[0]}
 				newRun={this.state.newRun}
 				onChange={this.onChange}
 				onInsert={this.insertRun}

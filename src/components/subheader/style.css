@@ -1,0 +1,7 @@
+.subheader {
+    display: flex;
+    justify-content: space-around;
+    background-color: var(--blue-dark);
+    border-bottom: 2px dashed var(--creme);
+    padding: var(--spacing-s);
+}

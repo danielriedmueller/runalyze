@@ -45,7 +45,8 @@ export const stringToDuration = (str) => {
     });
 }
 
-export const durationToString = (duration) => Math.floor(duration.asHours()) + ":" + duration.minutes() + ":" + duration.seconds();
+export const durationToString = (duration) =>
+    Math.floor(duration.asHours()) + ":" + duration.minutes() + ":" + duration.seconds();
 
 export const combineRuns = (runs) => {
     if (runs.length === 0) return null;

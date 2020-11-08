@@ -1,19 +1,15 @@
 .table {
   display: grid;
-  grid-template-columns: 120px 1fr 1fr 1fr 1fr;
-}
-
-.table div.legend {
-  background-color: #444444;
-  color: #fafafa;
-  border-color: #fafafa;
+  grid-template-columns: 1fr 1fr 1fr;
 }
 
 .table > div {
-  padding: var(--spacing-s);
-  border: 1px solid #444444;
-  border-bottom: none;
-  border-left: none;
+  border-right: 1px solid var(--creme);
   z-index: 999;
   text-align: center;
+  background-color: var(--blue-dark);
+}
+
+.table > div:nth-child(3n) {
+  border-right: none;
 }

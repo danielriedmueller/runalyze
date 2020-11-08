@@ -1,4 +1,5 @@
 import style from './style.css';
+import {isValidRun} from "../../helper/functions";
 
 export function NewRunInput(props) {
     return <div class={style.newRun}>
@@ -20,8 +21,8 @@ export function NewRunInput(props) {
                 placeholder={"00:00"}
             />
         </label>
-        <button onclick={() => {
+        {isValidRun(props.newRun) ? <button onclick={() => {
             props.onInsert(props.newRun)
-        }} />
+        }} /> : null}
     </div>;
 }

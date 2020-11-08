@@ -5,15 +5,6 @@ import dayjs from "dayjs";
 
 export function Table(props) {
     return <div class={style.table}>
-        <Legend />
-        <Stat
-            label={"Letzter"}
-            run={props.runs[0]}
-        />
-        <Stat
-            label={"Vorletzter"}
-            run={props.runs[1]}
-        />
         <Stat
             label={"Weitester"}
             run={findFurthestRun(props.runs)}
@@ -27,12 +18,16 @@ export function Table(props) {
             run={findFastestRun(props.runs)}
         />
         <Stat
-            label={"Diese Woche"}
+            label={"Woche"}
             run={combineRuns(getRunsBetween(props.runs, 'week'))}
         />
         <Stat
-            label={"Letzte Woche"}
+            label={"Woche -1"}
             run={combineRuns(getRunsBetween(props.runs, 'week', -1))}
+        />
+        <Stat
+            label={"Woche -2"}
+            run={combineRuns(getRunsBetween(props.runs, 'week', -2))}
         />
         <Stat
             label={dayjs().format('MMMM')}
@@ -43,12 +38,20 @@ export function Table(props) {
             run={combineRuns(getRunsBetween(props.runs, 'month', -1))}
         />
         <Stat
+            label={dayjs().subtract(2, 'month').format('MMMM')}
+            run={combineRuns(getRunsBetween(props.runs, 'month', -2))}
+        />
+        <Stat
             label={dayjs().get('year')}
             run={combineRuns(getRunsBetween(props.runs, 'year'))}
         />
         <Stat
             label={dayjs().subtract(1, 'year').get('year')}
             run={combineRuns(getRunsBetween(props.runs, 'year', -1))}
+        />
+        <Stat
+            label={dayjs().subtract(2, 'year').get('year')}
+            run={combineRuns(getRunsBetween(props.runs, 'year', -2))}
         />
     </div>;
 }
