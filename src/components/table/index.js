@@ -58,7 +58,7 @@ function Legend() {
         <div class={style.legend}></div>
         <div class={style.legend}>Datum / # Läufe</div>
         <div class={style.legend}>Pace (min/km)</div>
-        <div class={style.legend}>Strecke (km)</div>
-        <div class={style.legend}>Dauer</div>
+        <div class={style.legend}>Distanz (km) / &empty;</div>
+        <div class={style.legend}>Dauer / &empty;</div>
     </>
 }

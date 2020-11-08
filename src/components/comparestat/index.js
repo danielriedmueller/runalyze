@@ -27,7 +27,7 @@ export function Stat(props) {
 
 function StatAttr(props) {
     return <>
-        <div class={style.monospace}>{props.run.date.format('dddd, YYYY-MM-DD HH:mm:ss')}</div>
+        <div class={style.monospace}>{props.run.date.format('dddd')}<br /><small>{props.run.date.format('YYYY-MM-DD HH:mm:ss')}</small></div>
         <div class={style.monospace}>{calcPace(props.run.distance, props.run.duration)}</div>
         <div class={style.monospace}>{props.run.distance}</div>
         <div class={style.monospace}>{durationToString(props.run.duration)}</div>
@@ -38,13 +38,7 @@ function StatAttrAvg(props) {
     return <>
         <div class={style.monospace}>{props.run.runs ?? 1}</div>
         <div class={style.monospace}>{calcPace(props.run.distance, props.run.duration)}</div>
-        <div>
-            <div class={style.monospace}>{props.run.distance}</div>
-            <div class={style.monospace}>&empty; {props.run.avgDistance}</div>
-        </div>
-        <div>
-            <div class={style.monospace}>{durationToString(props.run.duration)}</div>
-            <div class={style.monospace}>&empty; {durationToString(props.run.avgDuration)}</div>
-        </div>
+        <div class={style.monospace}>{props.run.distance}<br /><small>{props.run.avgDistance}</small></div>
+        <div class={style.monospace}>{durationToString(props.run.duration)}<br /><small>{durationToString(props.run.avgDuration)}</small></div>
     </>;
 }

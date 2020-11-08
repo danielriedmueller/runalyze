@@ -7,8 +7,6 @@ import List from '../routes/list';
 import {Component} from "preact";
 import {isValidRun, jsonToRuns} from "../helper/functions";
 import dateformat from "dateformat";
-import style from "../routes/home/style.scss";
-import LineChart from "./chart";
 import {NewRunInput} from "./input";
 
 class App extends Component {
