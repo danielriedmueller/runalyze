@@ -51,7 +51,7 @@ export const durationToString = (duration) =>
 export const combineRuns = (runs) => {
     if (runs.length === 0) return null;
 
-    let duration = dayjs.duration({'hours': 10});
+    let duration = dayjs.duration({'hours': 0});
     let distance = 0;
 
     runs.forEach((run) => {
@@ -61,8 +61,8 @@ export const combineRuns = (runs) => {
 
     return {
         runs: runs.length,
-        distance: distance.toFixed(2),
-        avgDistance: (distance / runs.length).toFixed(2),
+        distance: (Math.round(distance * 100)/100),
+        avgDistance: (Math.round((distance / runs.length) * 100)/100),
         duration: duration,
         avgDuration: dayjs.duration(duration.asMilliseconds() /  runs.length)
     };
