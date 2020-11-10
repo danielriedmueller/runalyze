@@ -5,7 +5,7 @@ import Header from './header';
 import Home from '../routes/home';
 import List from '../routes/list';
 import {Component} from "preact";
-import {isValidRun, jsonToRuns} from "../helper/functions";
+import {getRunByDate, isValidRun, jsonToRuns} from "../helper/functions";
 import dateformat from "dateformat";
 import {Subheader} from "./subheader";
 
@@ -17,7 +17,8 @@ class App extends Component {
 			newRun: {
 				distance: null,
 				duration: null
-			}
+			},
+			currentRun: null
 		};
 
 		this.deleteRun = this.deleteRun.bind(this);
@@ -32,7 +33,8 @@ class App extends Component {
 	async fetchRuns() {
 		const response = await fetch(process.env.PREACT_APP_API_GET_RUNS);
 		const json = await response.json();
-		this.setState({runs: jsonToRuns(json)});
+		const runs = jsonToRuns(json);
+		this.setState({runs: runs, currentRun: runs[0]});
 	}
 
 	onChange(event) {
@@ -77,19 +79,27 @@ class App extends Component {
 		await this.fetchRuns();
 	}
 
+	updateCurrentRun(date) {
+		this.setState({currentRun: getRunByDate(this.state.runs, date)});
+	}
+
 	render() {
 		if (!this.state.runs) return null;
 
 		return <div id="app">
 			<Header />
 			<Subheader
-				currentRun={this.state.runs[0]}
+				currentRun={this.state.currentRun}
 				newRun={this.state.newRun}
 				onChange={this.onChange}
 				onInsert={this.insertRun}
 			/>
 			<Router>
-				<Home path="/" runs={this.state.runs} />
+				<Home path="/"
+					  runs={this.state.runs}
+					  currentRun={this.state.currentRun}
+					  updateCurrentRun={this.updateCurrentRun.bind(this)}
+				/>
 				<List path="/list" runs={this.state.runs} deleteRun={this.deleteRun} />
 			</Router>
 		</div>
