@@ -1,11 +1,17 @@
 import style from './style.css';
 import {Stat} from "../comparestat";
 import {NewRunInput} from "../input";
+import Home from "../../routes/home";
 
 export function Subheader(props) {
 	return <div class={style.subheader}>
 		<div class={style.currentRun}>
-			<Stat run={props.currentRun}/>
+			<Stat
+				class={props.graphMode}
+				run={props.currentRun}
+				changeCurrentRun={props.changeCurrentRun}
+				activeClass={props.graphMode + 'Active'}
+			/>
 		</div>
 		<NewRunInput
 			newRun={props.newRun}

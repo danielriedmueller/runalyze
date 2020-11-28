@@ -5,7 +5,7 @@ import Header from './header';
 import Home from '../routes/home';
 import List from '../routes/list';
 import {Component} from "preact";
-import {getRunByDate, isValidRun, jsonToRuns} from "../helper/functions";
+import {isValidRun, jsonToRuns} from "../helper/functions";
 import dateformat from "dateformat";
 import {Subheader} from "./subheader";
 
@@ -18,12 +18,14 @@ class App extends Component {
 				distance: null,
 				duration: null
 			},
-			currentRun: null
+			currentRun: null,
+			graphMode: 'pace'
 		};
 
 		this.deleteRun = this.deleteRun.bind(this);
 		this.onChange = this.onChange.bind(this);
 		this.insertRun = this.insertRun.bind(this);
+		this.changeCurrentRun = this.changeCurrentRun.bind(this);
 	}
 
 	async componentDidMount() {
@@ -33,8 +35,12 @@ class App extends Component {
 	async fetchRuns() {
 		const response = await fetch(process.env.PREACT_APP_API_GET_RUNS);
 		const json = await response.json();
-		const runs = jsonToRuns(json);
-		this.setState({runs: runs, currentRun: runs[0]});
+		const runs = jsonToRuns(json)
+		const currentRun = runs[0];
+		this.setState({
+			runs: runs.reverse(),
+			currentRun: currentRun
+		});
 	}
 
 	onChange(event) {
@@ -49,6 +55,13 @@ class App extends Component {
 		}
 
 		this.setState({newRun: newRun});
+	}
+
+	changeCurrentRun(run, graphMode) {
+		this.setState({
+			currentRun: run,
+			graphMode: graphMode ? graphMode : this.state.graphMode
+		});
 	}
 
 	async insertRun(newRun) {
@@ -79,10 +92,6 @@ class App extends Component {
 		await this.fetchRuns();
 	}
 
-	updateCurrentRun(date) {
-		this.setState({currentRun: getRunByDate(this.state.runs, date)});
-	}
-
 	render() {
 		if (!this.state.runs) return null;
 
@@ -93,12 +102,16 @@ class App extends Component {
 				newRun={this.state.newRun}
 				onChange={this.onChange}
 				onInsert={this.insertRun}
+				changeCurrentRun={this.changeCurrentRun}
+				graphMode={this.state.graphMode}
 			/>
 			<Router>
-				<Home path="/"
-					  runs={this.state.runs}
-					  currentRun={this.state.currentRun}
-					  updateCurrentRun={this.updateCurrentRun.bind(this)}
+				<Home
+					path="/"
+					runs={this.state.runs}
+					changeCurrentRun={this.changeCurrentRun}
+					currentRun={this.state.currentRun}
+					graphMode={this.state.graphMode}
 				/>
 				<List path="/list" runs={this.state.runs} deleteRun={this.deleteRun} />
 			</Router>

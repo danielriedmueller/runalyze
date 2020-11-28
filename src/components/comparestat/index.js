@@ -19,24 +19,29 @@ export function Stat(props) {
         </div>;
     }
 
-    if (props.label) {
-        return <div>
-            <div class={style.legend}>{props.label}</div>
-            <StatAttr run={props.run} />
-        </div>
-    }
-
-    return <div>
-        <StatAttr run={props.run} />
+    return <div class={props.activeClass ? style[props.activeClass] : ""}>
+        {props.label ? <div class={style.legend}>{props.label}</div> : null}
+        <StatAttr
+            run={props.run}
+            changeCurrentRun={props.changeCurrentRun}
+        />
     </div>;
 }
 
 function StatAttr(props) {
     return <>
-        <div class={style.date}>{props.run.date.format('dddd')}<br /><small>{props.run.date.format('YYYY-MM-DD HH:mm:ss')}</small></div>
-        <div class={style.pace}>{calcPace(props.run.distance, props.run.duration)}</div>
-        <div class={style.distance}>{props.run.distance}</div>
-        <div class={style.duration}>{durationToString(props.run.duration)}</div>
+        <div class={style.date} onclick={() => props.changeCurrentRun(props.run)}>
+            {props.run.date.format('dddd')}<br /><small>{props.run.date.format('YYYY-MM-DD HH:mm:ss')}</small>
+        </div>
+        <div class={style.pace} onclick={() => props.changeCurrentRun(props.run, 'pace')}>
+            {calcPace(props.run.distance, props.run.duration)}
+        </div>
+        <div class={style.distance} onclick={() => props.changeCurrentRun(props.run, 'distance')}>
+            {props.run.distance}
+        </div>
+        <div class={style.duration} onclick={() => props.changeCurrentRun(props.run, 'duration')}>
+            {durationToString(props.run.duration)}
+        </div>
     </>;
 }
 

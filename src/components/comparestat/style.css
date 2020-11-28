@@ -43,3 +43,15 @@ div.legend {
   padding: var(--spacing-s);
   margin-bottom: var(--spacing-s);
 }
+
+.paceActive > .pace {
+  background-color: var(--blue) !important;
+}
+
+.durationActive > .duration {
+  background-color: var(--blue) !important;
+}
+
+.distanceActive > .distance {
+  background-color: var(--blue) !important;
+}

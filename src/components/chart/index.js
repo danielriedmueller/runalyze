@@ -1,32 +1,26 @@
 import style from "./style.css";
-import {Component} from "preact";
-import {calcPace, durationToString, stringToDuration} from "../../helper/functions";
+import {Component, createRef} from "preact";
+import {calcPace, stringToDuration} from "../../helper/functions";
 
 class LineChart extends Component {
-    constructor() {
+    constructor(props) {
         super();
         this.opacityLow = 0.4;
-        this.graphs = ['pace', 'duration', 'distance'];
+        this.ref = createRef()
+        this.handleClick = this.handleClick.bind(this);
         this.state = {
-            'graph': this.graphs[0],
-            'minMax': {
-                'pace': {
+            minMax: {
+                pace: {
                     min: 240,
-                    minLabel: '04:00 min/km',
                     max: 480,
-                    maxLabel: '08:00 min/km'
                 },
-                'duration': {
+                duration: {
                     min: 900,
-                    minLabel: '00:00:15',
                     max: 5400,
-                    maxLabel: '01:30:00'
                 },
-                'distance': {
+                distance: {
                     min: 3,
-                    minLabel: '3 km',
                     max: 20,
-                    maxLabel : '20 km'
                 }
             }
         };
@@ -34,7 +28,7 @@ class LineChart extends Component {
 
     getSvgX(x) {
         const {svgWidth} = this.props
-        return (x / this.count) * svgWidth - 25
+        return (x / this.count) * svgWidth
     }
 
     getSvgY(y) {
@@ -55,83 +49,45 @@ class LineChart extends Component {
         </>
     }
 
-    filterLabel(value, index, ar) {
-        return index > 10 && (index % 10 === 0 || index === ar.length -1);
-    }
-
-    makeLabel(data, textPosY, isActive) {
-        return <>
-            <text
-                opacity={isActive ? 1 : 0.4}
-                x={this.getSvgX(data.x) - 20}
-                y={textPosY}>{data.label}
-            </text>
-            <text
-                opacity={isActive ? 1 : 0.4}
-                x={this.getSvgX(data.x) - 20}
-                y={50}>{data.date.format('YY-MM-DD')}
-            </text>
-            {isActive ? <circle
-                r={2}
-                cx={this.getSvgX(data.x)}
-                cy={this.getSvgY(data.y)}
-            /> : null }
-        </>
-    }
-
-    makeLabelTitle(title, labelYPos, isActive) {
-        return <text
-            opacity={isActive ? 1 : 0.4}
-            x={0}
-            y={labelYPos}>{title}
-        </text>
-    }
-
     normalize(val, minMax) {
         return (val - minMax.min) / (minMax.max - minMax.min);
     }
 
-    makePacePath(runs) {
-        const data = runs.map(this.getPaceData.bind(this));
-        const isActive = this.state.graph === 'pace';
-        const labelYPos = 30;
+    makePacePath() {
+        const data = this.props.runs.map(this.getPaceData.bind(this));
+        const isActive = this.props.graphMode === 'pace';
 
-        return <>
-            {this.makePath(data, isActive)}
-            {this.makeLabelTitle("Pace", labelYPos, isActive)}
-            {data.filter(this.filterLabel).map(point => this.makeLabel(point, labelYPos, isActive))}
-        </>;
+        return this.makePath(data, isActive);
     }
 
-    makeDurationPath(runs) {
-        const data = runs.map(this.getDurationData.bind(this));
-        const isActive = this.state.graph === 'duration';
-        const labelYPos = 40;
+    makeDurationPath() {
+        const data = this.props.runs.map(this.getDurationData.bind(this));
+        const isActive = this.props.graphMode === 'duration';
 
-        return <>
-            {this.makePath(data, isActive)}
-            {this.makeLabelTitle("Duration", labelYPos, isActive)}
-            {data.filter(this.filterLabel).map(point => this.makeLabel(point, 40, isActive))}
-        </>;
+        return this.makePath(data, isActive);
     }
 
-    makeDistancePath(runs) {
-        const data = runs.map(this.getDistanceData.bind(this));
-        const isActive = this.state.graph === 'distance';
-        const labelYPos = 20;
+    makeDistancePath() {
+        const data = this.props.runs.map(this.getDistanceData.bind(this));
+        const isActive = this.props.graphMode === 'distance';
 
-        return <>
-            {this.makePath(data, isActive)}
-            {this.makeLabelTitle("Distanz   ", labelYPos, isActive)}
-            {data.filter(this.filterLabel).map(point => this.makeLabel(point, 20, isActive))}
-        </>;
+        return this.makePath(data, isActive);
+    }
+
+    makeVerticalLine() {
+        const {svgHeight} = this.props
+        const currentRun = this.props.currentRun;
+        const runs = this.props.runs;
+
+        const x = this.getSvgX(runs.findIndex((run) => run.date.isSame(currentRun.date)));
+
+        return x ? <line x1={x} y1="0" x2={x} y2={svgHeight} opacity={this.opacityLow}/> : null;
     }
 
     getDistanceData(run, index) {
         return {
             x: index,
             y: this.normalize(run.distance, this.state.minMax.distance),
-            label: run.distance,
             date: run.date
         }
     }
@@ -142,7 +98,6 @@ class LineChart extends Component {
         return {
             x: index,
             y: this.normalize(stringToDuration(data).asSeconds(), this.state.minMax.pace),
-            label: data,
             date: run.date
         };
     }
@@ -151,40 +106,21 @@ class LineChart extends Component {
         return {
             x: index,
             y: this.normalize(run.duration.asSeconds(), this.state.minMax.duration),
-            label: durationToString(run.duration),
             date: run.date
         }
     }
 
-    getAxisValues() {
-        const minMax = this.state.minMax[this.state.graph];
+    handleClick(evt) {
+        const {svgWidth, runs, changeCurrentRun} = this.props
+        const svg = this.ref.current;
 
-        return <>
-            <text
-                 x={0}
-                 y={this.getSvgY(0)}
-                 font-size="3">{minMax.minLabel}
-            </text>
-            <text
-                x={0}
-                y={this.getSvgY(1)}
-                font-size="3">{minMax.maxLabel}
-            </text>
-        </>
-    }
+        const pt = svg.createSVGPoint();
+        pt.x = evt.clientX;
 
-    changeGraph() {
-        if (this.state.graph === this.graphs[0]) {
-            this.setState({graph: this.graphs[1]})
-        }
+        const svgP = pt.matrixTransform(svg.getScreenCTM().inverse());
+        const xOrg = Math.floor(svgP.x / svgWidth * this.count);
 
-        if (this.state.graph === this.graphs[1]) {
-            this.setState({graph: this.graphs[2]})
-        }
-
-        if (this.state.graph === this.graphs[2]) {
-            this.setState({graph: this.graphs[0]})
-        }
+        changeCurrentRun(runs[xOrg]);
     }
 
     render() {
@@ -192,12 +128,12 @@ class LineChart extends Component {
         this.count = runs.length;
 
         return (
-            <div onclick={this.changeGraph.bind(this)} class={style.chart}>
-                <svg viewBox={`0 0 ${svgWidth} ${svgHeight}`}>
-                    {this.makeLabelTitle('Datum', 50, true)}
-                    {this.makePacePath(runs)}
-                    {this.makeDurationPath(runs)}
-                    {this.makeDistancePath(runs)}
+            <div class={style.chart}>
+                <svg onclick={this.handleClick} ref={this.ref} viewBox={`0 0 ${svgWidth} ${svgHeight}`}>
+                    {this.makePacePath()}
+                    {this.makeDurationPath()}
+                    {this.makeDistancePath()}
+                    {this.makeVerticalLine()}
                 </svg>
             </div>
         )
