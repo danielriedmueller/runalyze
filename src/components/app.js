@@ -18,12 +18,14 @@ class App extends Component {
 				distance: null,
 				duration: null
 			},
-			currentRun: null
+			currentRun: null,
+			graphMode: 'pace'
 		};
 
 		this.deleteRun = this.deleteRun.bind(this);
 		this.onChange = this.onChange.bind(this);
 		this.insertRun = this.insertRun.bind(this);
+		this.changeCurrentRun = this.changeCurrentRun.bind(this);
 	}
 
 	async componentDidMount() {
@@ -34,9 +36,10 @@ class App extends Component {
 		const response = await fetch(process.env.PREACT_APP_API_GET_RUNS);
 		const json = await response.json();
 		const runs = jsonToRuns(json)
+		const currentRun = runs[0];
 		this.setState({
 			runs: runs.reverse(),
-			currentRun: runs[0]
+			currentRun: currentRun
 		});
 	}
 
@@ -54,8 +57,11 @@ class App extends Component {
 		this.setState({newRun: newRun});
 	}
 
-	changeCurrentRun(run) {
-		this.setState({currentRun: run});
+	changeCurrentRun(run, graphMode) {
+		this.setState({
+			currentRun: run,
+			graphMode: graphMode ? graphMode : this.state.graphMode
+		});
 	}
 
 	async insertRun(newRun) {
@@ -96,9 +102,17 @@ class App extends Component {
 				newRun={this.state.newRun}
 				onChange={this.onChange}
 				onInsert={this.insertRun}
+				changeCurrentRun={this.changeCurrentRun}
+				graphMode={this.state.graphMode}
 			/>
 			<Router>
-				<Home path="/" runs={this.state.runs} changeCurrentRun={this.changeCurrentRun.bind(this)}/>
+				<Home
+					path="/"
+					runs={this.state.runs}
+					changeCurrentRun={this.changeCurrentRun}
+					currentRun={this.state.currentRun}
+					graphMode={this.state.graphMode}
+				/>
 				<List path="/list" runs={this.state.runs} deleteRun={this.deleteRun} />
 			</Router>
 		</div>

@@ -1,17 +1,14 @@
 import style from "./style.css";
 import {Component, createRef} from "preact";
-import {calcPace, durationToString, stringToDuration} from "../../helper/functions";
+import {calcPace, stringToDuration} from "../../helper/functions";
 
 class LineChart extends Component {
-    constructor() {
+    constructor(props) {
         super();
         this.opacityLow = 0.4;
-        this.graphs = ['pace', 'duration', 'distance'];
         this.ref = createRef()
         this.handleClick = this.handleClick.bind(this);
         this.state = {
-            currentX: null,
-            graph: this.graphs[0],
             minMax: {
                 pace: {
                     min: 240,
@@ -56,30 +53,33 @@ class LineChart extends Component {
         return (val - minMax.min) / (minMax.max - minMax.min);
     }
 
-    makePacePath(runs) {
-        const data = runs.map(this.getPaceData.bind(this));
-        const isActive = this.state.graph === 'pace';
+    makePacePath() {
+        const data = this.props.runs.map(this.getPaceData.bind(this));
+        const isActive = this.props.graphMode === 'pace';
 
         return this.makePath(data, isActive);
     }
 
-    makeDurationPath(runs) {
-        const data = runs.map(this.getDurationData.bind(this));
-        const isActive = this.state.graph === 'duration';
+    makeDurationPath() {
+        const data = this.props.runs.map(this.getDurationData.bind(this));
+        const isActive = this.props.graphMode === 'duration';
 
         return this.makePath(data, isActive);
     }
 
-    makeDistancePath(runs) {
-        const data = runs.map(this.getDistanceData.bind(this));
-        const isActive = this.state.graph === 'distance';
+    makeDistancePath() {
+        const data = this.props.runs.map(this.getDistanceData.bind(this));
+        const isActive = this.props.graphMode === 'distance';
 
         return this.makePath(data, isActive);
     }
 
     makeVerticalLine() {
         const {svgHeight} = this.props
-        const x = this.getSvgX(this.state.currentX);
+        const currentRun = this.props.currentRun;
+        const runs = this.props.runs;
+
+        const x = this.getSvgX(runs.findIndex((run) => run.date.isSame(currentRun.date)));
 
         return x ? <line x1={x} y1="0" x2={x} y2={svgHeight} opacity={this.opacityLow}/> : null;
     }
@@ -121,20 +121,18 @@ class LineChart extends Component {
         const xOrg = Math.floor(svgP.x / svgWidth * this.count);
 
         changeCurrentRun(runs[xOrg]);
-
-        this.setState({currentX: xOrg})
     }
 
     render() {
-        const {svgHeight, svgWidth, runs, changeCurrentRun} = this.props
+        const {svgHeight, svgWidth, runs} = this.props
         this.count = runs.length;
 
         return (
             <div class={style.chart}>
                 <svg onclick={this.handleClick} ref={this.ref} viewBox={`0 0 ${svgWidth} ${svgHeight}`}>
-                    {this.makePacePath(runs)}
-                    {this.makeDurationPath(runs)}
-                    {this.makeDistancePath(runs)}
+                    {this.makePacePath()}
+                    {this.makeDurationPath()}
+                    {this.makeDistancePath()}
                     {this.makeVerticalLine()}
                 </svg>
             </div>

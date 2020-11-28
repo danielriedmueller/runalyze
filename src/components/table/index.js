@@ -4,18 +4,28 @@ import {combineRuns, findFastestRun, findFurthestRun, findLongestRun, getRunsBet
 import dayjs from "dayjs";
 
 export function Table(props) {
+    const furthestRun = findFurthestRun(props.runs);
+    const longestRun = findLongestRun(props.runs);
+    const fastestRun = findFastestRun(props.runs);
+
     return <div class={style.table}>
         <Stat
             label={"Weitester"}
-            run={findFurthestRun(props.runs)}
+            run={furthestRun}
+            changeCurrentRun={props.changeCurrentRun}
+            activeClass={getIsActiveClass(furthestRun, props)}
         />
         <Stat
             label={"Längster"}
-            run={findLongestRun(props.runs)}
+            run={longestRun}
+            changeCurrentRun={props.changeCurrentRun}
+            activeClass={getIsActiveClass(longestRun, props)}
         />
         <Stat
             label={"Schnellster"}
-            run={findFastestRun(props.runs)}
+            run={fastestRun}
+            changeCurrentRun={props.changeCurrentRun}
+            activeClass={getIsActiveClass(fastestRun, props)}
         />
         <Stat
             label={"Woche"}
@@ -56,12 +66,10 @@ export function Table(props) {
     </div>;
 }
 
-function Legend() {
-    return <>
-        <div class={style.legend}></div>
-        <div class={style.legend}>Datum / # Läufe</div>
-        <div class={style.legend}>Pace (min/km)</div>
-        <div class={style.legend}>Distanz (km) / &empty;</div>
-        <div class={style.legend}>Dauer / &empty;</div>
-    </>
+function getIsActiveClass(run, props) {
+    if (run.date.isSame(props.currentRun.date)) {
+        return props.graphMode + 'Active'
+    }
+
+    return null;
 }
