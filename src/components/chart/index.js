@@ -10,25 +10,20 @@ class LineChart extends Component {
         this.ref = createRef()
         this.handleClick = this.handleClick.bind(this);
         this.state = {
-            'graph': this.graphs[0],
-            'minMax': {
-                'pace': {
+            currentX: null,
+            graph: this.graphs[0],
+            minMax: {
+                pace: {
                     min: 240,
-                    minLabel: '04:00 min/km',
                     max: 480,
-                    maxLabel: '08:00 min/km'
                 },
-                'duration': {
+                duration: {
                     min: 900,
-                    minLabel: '00:00:15',
                     max: 5400,
-                    maxLabel: '01:30:00'
                 },
-                'distance': {
+                distance: {
                     min: 3,
-                    minLabel: '3 km',
                     max: 20,
-                    maxLabel : '20 km'
                 }
             }
         };
@@ -57,38 +52,6 @@ class LineChart extends Component {
         </>
     }
 
-    filterLabel(value, index, ar) {
-        return index > 10 && (index % 10 === 0 || index === ar.length -1);
-    }
-
-    makeLabel(data, textPosY, isActive) {
-        return <>
-            <text
-                opacity={isActive ? 1 : 0.4}
-                x={this.getSvgX(data.x) - 20}
-                y={textPosY}>{data.label}
-            </text>
-            <text
-                opacity={isActive ? 1 : 0.4}
-                x={this.getSvgX(data.x) - 20}
-                y={50}>{data.date.format('YY-MM-DD')}
-            </text>
-            {isActive ? <circle
-                r={2}
-                cx={this.getSvgX(data.x)}
-                cy={this.getSvgY(data.y)}
-            /> : null }
-        </>
-    }
-
-    makeLabelTitle(title, labelYPos, isActive) {
-        return <text
-            opacity={isActive ? 1 : 0.4}
-            x={0}
-            y={labelYPos}>{title}
-        </text>
-    }
-
     normalize(val, minMax) {
         return (val - minMax.min) / (minMax.max - minMax.min);
     }
@@ -96,44 +59,35 @@ class LineChart extends Component {
     makePacePath(runs) {
         const data = runs.map(this.getPaceData.bind(this));
         const isActive = this.state.graph === 'pace';
-        const labelYPos = 30;
 
-        return <>
-            {this.makePath(data, isActive)}
-            {this.makeLabelTitle("Pace", labelYPos, isActive)}
-            {data.filter(this.filterLabel).map(point => this.makeLabel(point, labelYPos, isActive))}
-        </>;
+        return this.makePath(data, isActive);
     }
 
     makeDurationPath(runs) {
         const data = runs.map(this.getDurationData.bind(this));
         const isActive = this.state.graph === 'duration';
-        const labelYPos = 40;
 
-        return <>
-            {this.makePath(data, isActive)}
-            {this.makeLabelTitle("Duration", labelYPos, isActive)}
-            {data.filter(this.filterLabel).map(point => this.makeLabel(point, 40, isActive))}
-        </>;
+        return this.makePath(data, isActive);
     }
 
     makeDistancePath(runs) {
         const data = runs.map(this.getDistanceData.bind(this));
         const isActive = this.state.graph === 'distance';
-        const labelYPos = 20;
 
-        return <>
-            {this.makePath(data, isActive)}
-            {this.makeLabelTitle("Distanz   ", labelYPos, isActive)}
-            {data.filter(this.filterLabel).map(point => this.makeLabel(point, 20, isActive))}
-        </>;
+        return this.makePath(data, isActive);
+    }
+
+    makeVerticalLine() {
+        const {svgHeight} = this.props
+        const x = this.getSvgX(this.state.currentX);
+
+        return x ? <line x1={x} y1="0" x2={x} y2={svgHeight} opacity={this.opacityLow}/> : null;
     }
 
     getDistanceData(run, index) {
         return {
             x: index,
             y: this.normalize(run.distance, this.state.minMax.distance),
-            label: run.distance,
             date: run.date
         }
     }
@@ -144,7 +98,6 @@ class LineChart extends Component {
         return {
             x: index,
             y: this.normalize(stringToDuration(data).asSeconds(), this.state.minMax.pace),
-            label: data,
             date: run.date
         };
     }
@@ -153,36 +106,23 @@ class LineChart extends Component {
         return {
             x: index,
             y: this.normalize(run.duration.asSeconds(), this.state.minMax.duration),
-            label: durationToString(run.duration),
             date: run.date
         }
-    }
-
-    getAxisValues() {
-        const minMax = this.state.minMax[this.state.graph];
-
-        return <>
-            <text
-                 x={0}
-                 y={this.getSvgY(0)}
-                 font-size="3">{minMax.minLabel}
-            </text>
-            <text
-                x={0}
-                y={this.getSvgY(1)}
-                font-size="3">{minMax.maxLabel}
-            </text>
-        </>
     }
 
     handleClick(evt) {
         const {svgWidth, runs, changeCurrentRun} = this.props
         const svg = this.ref.current;
+
         const pt = svg.createSVGPoint();
         pt.x = evt.clientX;
+
         const svgP = pt.matrixTransform(svg.getScreenCTM().inverse());
-        const xOrg = svgP.x / svgWidth * this.count;
-        changeCurrentRun(runs[Math.floor(xOrg)]);
+        const xOrg = Math.floor(svgP.x / svgWidth * this.count);
+
+        changeCurrentRun(runs[xOrg]);
+
+        this.setState({currentX: xOrg})
     }
 
     render() {
@@ -191,13 +131,11 @@ class LineChart extends Component {
 
         return (
             <div class={style.chart}>
-                <svg id="mysvg" ref={this.ref} viewBox={`0 0 ${svgWidth} ${svgHeight}`}>
-                    <g onclick={this.handleClick}>
-                        {this.makeLabelTitle('Datum', 50, true)}
-                        {this.makePacePath(runs)}
-                        {this.makeDurationPath(runs)}
-                        {this.makeDistancePath(runs)}
-                    </g>
+                <svg onclick={this.handleClick} ref={this.ref} viewBox={`0 0 ${svgWidth} ${svgHeight}`}>
+                    {this.makePacePath(runs)}
+                    {this.makeDurationPath(runs)}
+                    {this.makeDistancePath(runs)}
+                    {this.makeVerticalLine()}
                 </svg>
             </div>
         )

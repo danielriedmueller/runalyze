@@ -10,8 +10,14 @@
   stroke: var(--red);
 }
 
-.chart .linechart_axis {
-  stroke: #fff;
+.chart .linechart_path {
+  stroke-width: 1;
+  fill: none;
+  stroke: var(--red);
+}
+
+.chart line {
+  stroke: var(--blue-dark);
 }
 
 .chart text {
