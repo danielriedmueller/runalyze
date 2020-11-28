@@ -1,5 +1,5 @@
 import style from "./style.css";
-import {Component} from "preact";
+import {Component, createRef} from "preact";
 import {calcPace, durationToString, stringToDuration} from "../../helper/functions";
 
 class LineChart extends Component {
@@ -7,6 +7,8 @@ class LineChart extends Component {
         super();
         this.opacityLow = 0.4;
         this.graphs = ['pace', 'duration', 'distance'];
+        this.ref = createRef()
+        this.handleClick = this.handleClick.bind(this);
         this.state = {
             'graph': this.graphs[0],
             'minMax': {
@@ -34,7 +36,7 @@ class LineChart extends Component {
 
     getSvgX(x) {
         const {svgWidth} = this.props
-        return (x / this.count) * svgWidth - 25
+        return (x / this.count) * svgWidth
     }
 
     getSvgY(y) {
@@ -173,31 +175,29 @@ class LineChart extends Component {
         </>
     }
 
-    changeGraph() {
-        if (this.state.graph === this.graphs[0]) {
-            this.setState({graph: this.graphs[1]})
-        }
-
-        if (this.state.graph === this.graphs[1]) {
-            this.setState({graph: this.graphs[2]})
-        }
-
-        if (this.state.graph === this.graphs[2]) {
-            this.setState({graph: this.graphs[0]})
-        }
+    handleClick(evt) {
+        const {svgWidth, runs, changeCurrentRun} = this.props
+        const svg = this.ref.current;
+        const pt = svg.createSVGPoint();
+        pt.x = evt.clientX;
+        const svgP = pt.matrixTransform(svg.getScreenCTM().inverse());
+        const xOrg = svgP.x / svgWidth * this.count;
+        changeCurrentRun(runs[Math.floor(xOrg)]);
     }
 
     render() {
-        const {svgHeight, svgWidth, runs} = this.props
+        const {svgHeight, svgWidth, runs, changeCurrentRun} = this.props
         this.count = runs.length;
 
         return (
-            <div onclick={this.changeGraph.bind(this)} class={style.chart}>
-                <svg viewBox={`0 0 ${svgWidth} ${svgHeight}`}>
-                    {this.makeLabelTitle('Datum', 50, true)}
-                    {this.makePacePath(runs)}
-                    {this.makeDurationPath(runs)}
-                    {this.makeDistancePath(runs)}
+            <div class={style.chart}>
+                <svg id="mysvg" ref={this.ref} viewBox={`0 0 ${svgWidth} ${svgHeight}`}>
+                    <g onclick={this.handleClick}>
+                        {this.makeLabelTitle('Datum', 50, true)}
+                        {this.makePacePath(runs)}
+                        {this.makeDurationPath(runs)}
+                        {this.makeDistancePath(runs)}
+                    </g>
                 </svg>
             </div>
         )

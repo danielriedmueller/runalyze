@@ -6,7 +6,7 @@ import LineChart from "../../components/chart";
 class Home extends Component {
 	render(props) {
 		return <div class={style.home}>
-			<LineChart runs={props.runs.slice(0, 100).reverse()} />
+			<LineChart runs={props.runs} changeCurrentRun={this.props.changeCurrentRun}/>
 			<Table runs={props.runs} />
 		</div>;
 	}
