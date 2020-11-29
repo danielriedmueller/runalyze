@@ -1,12 +1,10 @@
 .list {
-	padding: 56px 20px;
-	min-height: 100%;
-	width: 100%;
-	color: #000;
+	padding: var(--spacing-s);
+	background-color: var(--blue);
 }
 
 table {
-width: 100%;
+	width: 100%;
 }
 
 td, th {
