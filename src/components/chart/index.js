@@ -115,13 +115,15 @@ class LineChart extends Component {
         const svg = this.ref.current;
 
         const pt = svg.createSVGPoint();
-
-        pt.x = evt.targetTouches[0].clientX;
+        pt.x = evt.clientX || evt.targetTouches[0].clientX;
 
         const svgP = pt.matrixTransform(svg.getScreenCTM().inverse());
         const xOrg = Math.floor(svgP.x / svgWidth * this.count);
 
-        changeCurrentRun(runs[xOrg]);
+        const currentRun = runs[xOrg];
+        if (currentRun) {
+            changeCurrentRun(currenn);
+        }
     }
 
     render() {
@@ -144,8 +146,8 @@ class LineChart extends Component {
 LineChart.defaultProps = {
     data: [],
     color: '#ff4500',
-    svgHeight: 350,
+    svgHeight: 400,
     svgWidth: 600,
 }
 
-export default LineChart
+export default LineChart;
