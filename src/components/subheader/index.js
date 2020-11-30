@@ -1,7 +1,6 @@
 import style from './style.css';
 import {Stat} from "../comparestat";
 import {NewRunInput} from "../input";
-import Home from "../../routes/home";
 
 export function Subheader(props) {
 	return <div class={style.subheader}>
@@ -16,7 +15,7 @@ export function Subheader(props) {
 		<NewRunInput
 			newRun={props.newRun}
 			onChange={props.onChange}
-			onInsert={props.insertRun}
+			onInsert={props.onInsert}
 		/>
 	</div>;
 }
