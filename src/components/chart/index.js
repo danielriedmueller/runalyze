@@ -115,7 +115,8 @@ class LineChart extends Component {
         const svg = this.ref.current;
 
         const pt = svg.createSVGPoint();
-        pt.x = evt.clientX;
+
+        pt.x = evt.targetTouches[0].clientX;
 
         const svgP = pt.matrixTransform(svg.getScreenCTM().inverse());
         const xOrg = Math.floor(svgP.x / svgWidth * this.count);
@@ -129,7 +130,7 @@ class LineChart extends Component {
 
         return (
             <div class={style.chart}>
-                <svg onclick={this.handleClick} ref={this.ref} viewBox={`0 0 ${svgWidth} ${svgHeight}`}>
+                <svg ontouchmove={this.handleClick} ref={this.ref} viewBox={`0 0 ${svgWidth} ${svgHeight}`}>
                     {this.makePacePath()}
                     {this.makeDurationPath()}
                     {this.makeDistancePath()}
@@ -143,8 +144,8 @@ class LineChart extends Component {
 LineChart.defaultProps = {
     data: [],
     color: '#ff4500',
-    svgHeight: 200,
+    svgHeight: 350,
     svgWidth: 600,
 }
 
-export default LineChart;
+export default LineChart

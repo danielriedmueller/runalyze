@@ -68,8 +68,6 @@ export const combineRuns = (runs) => {
     };
 }
 
-export const getRunByDate = (runs, date) => runs.filter((run) => run.date.isSame(date))[0];
-
 export const getDateRange = (range, deviation = 0) => {
     const date = dayjs().add(deviation, range);
 
