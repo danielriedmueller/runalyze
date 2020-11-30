@@ -8,6 +8,7 @@ class LineChart extends Component {
         this.opacityLow = 0.4;
         this.ref = createRef()
         this.handleClick = this.handleClick.bind(this);
+        this.handleTouchMove = this.handleTouchMove.bind(this);
         this.state = {
             minMax: {
                 pace: {
@@ -20,7 +21,7 @@ class LineChart extends Component {
                 },
                 distance: {
                     min: 3,
-                    max: 20,
+                    max: 15,
                 }
             }
         };
@@ -111,6 +112,11 @@ class LineChart extends Component {
     }
 
     handleClick(evt) {
+        const graphMode = this.props.graphMode;
+        this.props.changeGraphMode(graphMode === 'pace' ? 'distance' : graphMode === 'distance' ? 'duration' : 'pace');
+    }
+
+    handleTouchMove(evt) {
         const {svgWidth, runs, changeCurrentRun} = this.props
         const svg = this.ref.current;
 
@@ -122,7 +128,7 @@ class LineChart extends Component {
 
         const currentRun = runs[xOrg];
         if (currentRun) {
-            changeCurrentRun(currenn);
+            changeCurrentRun(currentRun);
         }
     }
 
@@ -132,7 +138,7 @@ class LineChart extends Component {
 
         return (
             <div class={style.chart}>
-                <svg ontouchmove={this.handleClick} ref={this.ref} viewBox={`0 0 ${svgWidth} ${svgHeight}`}>
+                <svg ontouchmove={this.handleTouchMove} onclick={this.handleClick} ref={this.ref} viewBox={`0 0 ${svgWidth} ${svgHeight}`}>
                     {this.makePacePath()}
                     {this.makeDurationPath()}
                     {this.makeDistancePath()}

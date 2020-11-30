@@ -26,6 +26,7 @@ class App extends Component {
 		this.onChange = this.onChange.bind(this);
 		this.insertRun = this.insertRun.bind(this);
 		this.changeCurrentRun = this.changeCurrentRun.bind(this);
+		this.changeGraphMode = this.changeGraphMode.bind(this);
 	}
 
 	async componentDidMount() {
@@ -61,6 +62,12 @@ class App extends Component {
 		this.setState({
 			currentRun: run,
 			graphMode: graphMode ? graphMode : this.state.graphMode
+		});
+	}
+
+	changeGraphMode(graphMode) {
+		this.setState({
+			graphMode: graphMode
 		});
 	}
 
@@ -110,6 +117,7 @@ class App extends Component {
 					path="/"
 					runs={this.state.runs}
 					changeCurrentRun={this.changeCurrentRun}
+					changeGraphMode={this.changeGraphMode}
 					currentRun={this.state.currentRun}
 					graphMode={this.state.graphMode}
 				/>

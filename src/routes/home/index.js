@@ -2,7 +2,6 @@ import style from './style.css';
 import {Component} from "preact";
 import {Table} from "../../components/table";
 import LineChart from "../../components/chart";
-import {Subheader} from "../../components/subheader";
 
 class Home extends Component {
 	render(props) {
@@ -10,6 +9,7 @@ class Home extends Component {
 			<LineChart
 				runs={props.runs}
 				changeCurrentRun={props.changeCurrentRun}
+				changeGraphMode={props.changeGraphMode}
 				currentRun={props.currentRun}
 				graphMode={props.graphMode}
 			/>
