@@ -23,7 +23,7 @@ class App extends Component {
 			runFilter: {
 				year: null,
 				month: null,
-				week: 8
+				week: null
 			}
 		};
 
@@ -131,6 +131,7 @@ class App extends Component {
 					filteredRuns={filterRuns(this.state.runs, this.state.runFilter)}
 					changeCurrentRun={this.changeCurrentRun}
 					changeGraphMode={this.changeGraphMode}
+					changeRunFilter={this.changeRunFilter}
 					currentRun={this.state.currentRun}
 					graphMode={this.state.graphMode}
 				/>

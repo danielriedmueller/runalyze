@@ -20,7 +20,10 @@ class Home extends Component {
 				currentRun={props.currentRun}
 				graphMode={props.graphMode}
 			/>
-			<Table runs={props.runs} />
+			<Table
+				changeRunFilter={props.changeRunFilter}
+				runs={props.runs}
+			/>
 		</div>;
 	}
 }

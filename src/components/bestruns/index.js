@@ -1,6 +1,7 @@
 import style from './style.css';
-import {Stat} from "../comparestat";
 import {findFastestRun, findFurthestRun, findLongestRun} from "../../helper/functions";
+import React from "preact/compat";
+import {StatAttr} from "../statattr";
 
 export function BestRuns(props) {
     const furthestRun = findFurthestRun(props.runs, props.runFilter);
@@ -8,19 +9,19 @@ export function BestRuns(props) {
     const fastestRun = findFastestRun(props.runs);
 
     return <div class={style.table}>
-        <Stat
+        <StatAttr
             label={"Weitester"}
             run={furthestRun}
             changeCurrentRun={props.changeCurrentRun}
             activeClass={getIsActiveClass(furthestRun, props)}
         />
-        <Stat
+        <StatAttr
             label={"Längster"}
             run={longestRun}
             changeCurrentRun={props.changeCurrentRun}
             activeClass={getIsActiveClass(longestRun, props)}
         />
-        <Stat
+        <StatAttr
             label={"Schnellster"}
             run={fastestRun}
             changeCurrentRun={props.changeCurrentRun}

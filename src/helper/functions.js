@@ -69,7 +69,12 @@ export const combineRuns = (runs) => {
 }
 
 export const getDateRange = (range, deviation = 0) => {
-    const date = dayjs().add(deviation, range);
+    let date = dayjs();
+    if (range === "week") {
+        date = date.week(deviation);
+    } else {
+        date = dayjs().set(range, deviation);
+    }
 
     return [
         date.clone().startOf(range),
@@ -79,7 +84,6 @@ export const getDateRange = (range, deviation = 0) => {
 
 export const getRunsInTimeRange = (runs, range, deviation = 0) => {
     const dateRange = getDateRange(range, deviation);
-
     return getRunsBetween(runs, dateRange);
 };
 

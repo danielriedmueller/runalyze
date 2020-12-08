@@ -1,11 +1,12 @@
 import style from './style.css';
-import {Stat} from "../comparestat";
 import {NewRunInput} from "../input";
+import React from "preact/compat";
+import {StatAttr} from "../statattr";
 
 export function Subheader(props) {
 	return <div class={style.subheader}>
 		<div class={style.currentRun}>
-			<Stat
+			<StatAttr
 				class={props.graphMode}
 				run={props.currentRun}
 				changeCurrentRun={props.changeCurrentRun}

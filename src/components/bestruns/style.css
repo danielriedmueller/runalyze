@@ -13,9 +13,3 @@
 .table > div:nth-child(3n) {
   border-right: none;
 }
-
-.table > div > div:first-child {
-  background-color: var(--red);
-  color: var(--creme);
-}
-

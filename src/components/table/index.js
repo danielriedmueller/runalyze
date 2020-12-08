@@ -1,45 +1,49 @@
 import style from './style.css';
-import {Stat} from "../comparestat";
+import {StatAttrAvg} from "../stattattravg";
 import {combineRuns, getRunsInTimeRange} from "../../helper/functions";
 import dayjs from "dayjs";
+import React from "preact/compat";
 
 export function Table(props) {
-    return <div class={style.table}>
-        <Stat
-            label={"Woche"}
-            run={combineRuns(getRunsInTimeRange(props.runs, 'week'))}
-        />
-        <Stat
-            label={"Woche -1"}
-            run={combineRuns(getRunsInTimeRange(props.runs, 'week', -1))}
-        />
-        <Stat
-            label={"Woche -2"}
-            run={combineRuns(getRunsInTimeRange(props.runs, 'week', -2))}
-        />
-        <Stat
-            label={dayjs().format('MMMM')}
-            run={combineRuns(getRunsInTimeRange(props.runs, 'month'))}
-        />
-        <Stat
-            label={dayjs().subtract(1, 'month').format('MMMM')}
-            run={combineRuns(getRunsInTimeRange(props.runs, 'month', -1))}
-        />
-        <Stat
-            label={dayjs().subtract(2, 'month').format('MMMM')}
-            run={combineRuns(getRunsInTimeRange(props.runs, 'month', -2))}
-        />
-        <Stat
-            label={dayjs().get('year')}
-            run={combineRuns(getRunsInTimeRange(props.runs, 'year'))}
-        />
-        <Stat
-            label={dayjs().subtract(1, 'year').get('year')}
-            run={combineRuns(getRunsInTimeRange(props.runs, 'year', -1))}
-        />
-        <Stat
-            label={dayjs().subtract(2, 'year').get('year')}
-            run={combineRuns(getRunsInTimeRange(props.runs, 'year', -2))}
-        />
-    </div>;
+
+    const allWeeks = () => {
+        let weeks = [];
+        for (let i = dayjs().week(); i > 0; i--) {
+            weeks.push(<StatAttrAvg
+                label={"KW " + i}
+                run={combineRuns(getRunsInTimeRange(props.runs, 'week', i))}
+            />)
+        }
+        return weeks;
+    }
+
+    const allMonths = () => {
+        let months = [];
+        for (let i = dayjs().month(); i > 0; i--) {
+            months.push(<StatAttrAvg
+                label={dayjs().add(i, 'month').format('MMMM')}
+                run={combineRuns(getRunsInTimeRange(props.runs, 'month', i))}
+            />)
+        }
+        return months;
+    }
+
+    const allYears = () => {
+        let years = [];
+        const firstYear = props.runs[0].date.year();
+        const currentYear = dayjs().year();
+        for (let i = currentYear; i > firstYear - 1; i--) {
+            years.push(<StatAttrAvg
+                label={i}
+                run={combineRuns(getRunsInTimeRange(props.runs, 'year', i))}
+            />)
+        }
+        return years;
+    }
+
+    return <>
+        <div class={style.table}>{allWeeks()}</div>
+        <div class={style.table}>{allMonths()}</div>
+        <div class={style.table}>{allYears()}</div>
+    </>;
 }
