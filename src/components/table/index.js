@@ -19,10 +19,11 @@ export function Table(props) {
 
     const allMonths = () => {
         let months = [];
-        for (let i = dayjs().month(); i > 0; i--) {
+        for (let i = dayjs().month(); i > -1; i--) {
+            console.log(i);
             months.push(<StatAttrAvg
-                label={dayjs().add(i, 'month').format('MMMM')}
-                run={combineRuns(getRunsInTimeRange(props.runs, 'month', i - 1))}
+                label={dayjs().add(i + 1, 'month').format('MMMM')}
+                run={combineRuns(getRunsInTimeRange(props.runs, 'month', i))}
             />)
         }
         return months;
