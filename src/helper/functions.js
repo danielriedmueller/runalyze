@@ -77,10 +77,13 @@ export const getDateRange = (range, deviation = 0) => {
     ];
 }
 
-export const getRunsBetween = (runs, range, deviation = 0) => runs.filter((run) => {
+export const getRunsInTimeRange = (runs, range, deviation = 0) => {
     const dateRange = getDateRange(range, deviation);
-    return run.date.isAfter(dateRange[0]) && run.date.isBefore(dateRange[1]);
-});
+
+    return getRunsBetween(runs, dateRange);
+};
+
+export const getRunsBetween = (runs, dateRange) => runs.filter((run) => run.date.isAfter(dateRange[0]) && run.date.isBefore(dateRange[1]));
 
 export const findFastestRun = (runs) => runs.reduce((prev, current) => {
     const durationA = stringToDuration(calcPace(prev.distance, prev.duration));
@@ -96,3 +99,37 @@ export const calcPace = (distance, duration) => new Pacer()
     .withLength(new Length(distance, 'km'))
     .withTime(new Timespan().addMilliseconds(duration.asMilliseconds()))
     .toPaceUnit('min/km').toString();
+
+export const filterRuns = (runs, filter) => {
+    let {year, month, week} = filter;
+
+    if (!year && !month && !week) return runs;
+
+    if (!year) {
+        year = dayjs().year();
+    }
+    let date = dayjs(year + "-1", "YYYY-M");
+
+    if (week) {
+        date = date.week(week);
+
+        return getRunsBetween(runs, [
+            date.clone().startOf('week'),
+            date.clone().endOf('week')
+        ])
+    }
+
+    if (month) {
+        date = date.month(month - 1);
+
+        return getRunsBetween(runs, [
+            date.clone().startOf('month'),
+            date.clone().endOf('month')
+        ])
+    }
+
+    return getRunsBetween(runs, [
+        date.clone().startOf('year'),
+        date.clone().endOf('year')
+    ])
+}

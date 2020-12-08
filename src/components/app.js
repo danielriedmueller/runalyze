@@ -5,7 +5,7 @@ import Header from './header';
 import Home from '../routes/home';
 import List from '../routes/list';
 import {Component} from "preact";
-import {isValidRun, jsonToRuns} from "../helper/functions";
+import {filterRuns, isValidRun, jsonToRuns} from "../helper/functions";
 import dateformat from "dateformat";
 import {Subheader} from "./subheader";
 
@@ -19,13 +19,19 @@ class App extends Component {
 				duration: null
 			},
 			currentRun: null,
-			graphMode: 'pace'
+			graphMode: 'pace',
+			runFilter: {
+				year: null,
+				month: null,
+				week: 8
+			}
 		};
 
 		this.deleteRun = this.deleteRun.bind(this);
 		this.onChange = this.onChange.bind(this);
 		this.insertRun = this.insertRun.bind(this);
 		this.changeCurrentRun = this.changeCurrentRun.bind(this);
+		this.changeRunFilter = this.changeRunFilter.bind(this);
 		this.changeGraphMode = this.changeGraphMode.bind(this);
 	}
 
@@ -68,6 +74,12 @@ class App extends Component {
 	changeGraphMode(graphMode) {
 		this.setState({
 			graphMode: graphMode
+		});
+	}
+
+	changeRunFilter(filter) {
+		this.setState({
+			runFilter: filter
 		});
 	}
 
@@ -116,6 +128,7 @@ class App extends Component {
 				<Home
 					path="/"
 					runs={this.state.runs}
+					filteredRuns={filterRuns(this.state.runs, this.state.runFilter)}
 					changeCurrentRun={this.changeCurrentRun}
 					changeGraphMode={this.changeGraphMode}
 					currentRun={this.state.currentRun}
