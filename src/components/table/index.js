@@ -22,7 +22,7 @@ export function Table(props) {
         for (let i = dayjs().month(); i > 0; i--) {
             months.push(<StatAttrAvg
                 label={dayjs().add(i, 'month').format('MMMM')}
-                run={combineRuns(getRunsInTimeRange(props.runs, 'month', i))}
+                run={combineRuns(getRunsInTimeRange(props.runs, 'month', i - 1))}
             />)
         }
         return months;
