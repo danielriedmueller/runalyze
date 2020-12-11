@@ -8,6 +8,7 @@ import {Component} from "preact";
 import {isValidRun, jsonToRuns} from "../helper/functions";
 import dateformat from "dateformat";
 import {Subheader} from "./subheader";
+import dayjs from "dayjs";
 
 class App extends Component {
 	constructor() {
@@ -21,7 +22,7 @@ class App extends Component {
 			currentRun: null,
 			graphMode: 'pace',
 			runFilter: {
-				year: null,
+				year: dayjs().year(),
 				month: null,
 				week: null
 			}
@@ -80,6 +81,7 @@ class App extends Component {
 	changeRunFilter(filter) {
 		const {year, month, week} = this.state.runFilter;
 
+		/*
 		if (year !== filter.year) {
 			filter.month = null;
 			filter.week = null;
@@ -89,9 +91,11 @@ class App extends Component {
 			filter.week = null;
 		}
 
+		 */
+
 		this.setState({
 			runFilter: {
-				year: filter.year === year ? null : filter.year || year,
+				year: filter.year === year ? dayjs().year() : filter.year || year,
 				month: filter.month === month ? null : filter.month || month,
 				week: filter.week === week ? null : filter.week || week
 			}

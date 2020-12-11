@@ -19,6 +19,7 @@ export function MonthRuns(props) {
                 <StatAttrAvg
                     label={dayjs().add(i + 1, 'month').format('MMMM')}
                     run={combineRuns(getRunsInTimeRange(props.runs, 'month', year, i))}
+                    isActive={i === props.runFilter.month}
             /></div>)
         }
         return months;

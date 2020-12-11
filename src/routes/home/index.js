@@ -26,14 +26,17 @@ class Home extends Component {
 			<WeekRuns
 				runs={filterRuns(props.runs, {year: props.runFilter.year, month: props.runFilter.month})}
 				changeRunFilter={props.changeRunFilter}
+				runFilter={props.runFilter}
 			/>
 			<MonthRuns
 				runs={filterRuns(props.runs, {year: props.runFilter.year})}
 				changeRunFilter={props.changeRunFilter}
+				runFilter={props.runFilter}
 			/>
 			<YearRuns
-				changeRunFilter={props.changeRunFilter}
 				runs={props.runs}
+				changeRunFilter={props.changeRunFilter}
+				runFilter={props.runFilter}
 			/>
 		</div>;
 	}

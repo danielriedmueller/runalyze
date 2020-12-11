@@ -4,7 +4,7 @@ import {calcPace, durationToString} from "../../helper/functions";
 export function StatAttrAvg(props) {
     if (!props.run) {
         return <div>
-            <div class={style.legend}>{props.label}</div>
+            <div className={props.isActive ? style.activeLegend : style.legend}>{props.label}</div>
             <div class={style.count}>0</div>
             <div class={style.pace}>-</div>
             <div class={style.distance}>-</div>
@@ -13,7 +13,7 @@ export function StatAttrAvg(props) {
     }
 
     return <div>
-        <div className={style.legend}>{props.label}</div>
+        <div className={props.isActive ? style.activeLegend : style.legend}>{props.label}</div>
         <div class={style.count}>{props.run.runs ?? 1}</div>
         <div class={style.pace}>{calcPace(props.run.distance, props.run.duration)}</div>
         <div class={style.distance}>{props.run.distance}<br /><small>{props.run.avgDistance}</small></div>

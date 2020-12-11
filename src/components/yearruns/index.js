@@ -16,6 +16,7 @@ export function YearRuns(props) {
                 ><StatAttrAvg
                     label={i}
                     run={combineRuns(getRunsInTimeRange(props.runs, 'year', currentYear, i))}
+                    isActive={i === props.runFilter.year}
             /></div>)
         }
         return years;

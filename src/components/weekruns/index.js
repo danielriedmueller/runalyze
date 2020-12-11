@@ -24,6 +24,7 @@ export function WeekRuns(props) {
                 <StatAttrAvg
                     label={"KW " + i}
                     run={combineRuns(getRunsInTimeRange(props.runs, 'week', year, i))}
+                    isActive={i === props.runFilter.week}
             /></div>)
         }
         return weeks;

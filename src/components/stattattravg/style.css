@@ -44,6 +44,14 @@ div.legend {
   margin-bottom: var(--spacing-s);
 }
 
+div.activeLegend {
+  font-family: 'Montserrat', sans-serif;
+  padding: var(--spacing-s);
+  margin-bottom: var(--spacing-s);
+  background-color: var(--red);
+  color: var(--creme);
+}
+
 .paceActive > .pace {
   background-color: var(--blue) !important;
 }
