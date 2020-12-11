@@ -1,11 +1,11 @@
-import { Router } from 'preact-router';
+import {Router} from 'preact-router';
 
 import Header from './header';
 
 import Home from '../routes/home';
 import List from '../routes/list';
 import {Component} from "preact";
-import {filterRuns, isValidRun, jsonToRuns} from "../helper/functions";
+import {isValidRun, jsonToRuns} from "../helper/functions";
 import dateformat from "dateformat";
 import {Subheader} from "./subheader";
 
@@ -78,8 +78,23 @@ class App extends Component {
 	}
 
 	changeRunFilter(filter) {
+		const {year, month, week} = this.state.runFilter;
+
+		if (year !== filter.year) {
+			filter.month = null;
+			filter.week = null;
+		}
+
+		if (month !== filter.month) {
+			filter.week = null;
+		}
+
 		this.setState({
-			runFilter: filter
+			runFilter: {
+				year: filter.year === year ? null : filter.year || year,
+				month: filter.month === month ? null : filter.month || month,
+				week: filter.week === week ? null : filter.week || week
+			}
 		});
 	}
 
@@ -128,7 +143,7 @@ class App extends Component {
 				<Home
 					path="/"
 					runs={this.state.runs}
-					filteredRuns={filterRuns(this.state.runs, this.state.runFilter)}
+					runFilter={this.state.runFilter}
 					changeCurrentRun={this.changeCurrentRun}
 					changeGraphMode={this.changeGraphMode}
 					changeRunFilter={this.changeRunFilter}

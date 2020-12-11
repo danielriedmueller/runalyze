@@ -136,6 +136,12 @@ class LineChart extends Component {
         const {svgHeight, svgWidth, runs} = this.props
         this.count = runs.length;
 
+        if (this.count === 0) {
+            return <div className={style.chart}>
+                <svg viewBox={`0 0 ${svgWidth} ${svgHeight}`}></svg>
+            </div>
+        }
+
         return (
             <div class={style.chart}>
                 <svg ontouchmove={this.handleTouchMove} onclick={this.handleClick} ref={this.ref} viewBox={`0 0 ${svgWidth} ${svgHeight}`}>

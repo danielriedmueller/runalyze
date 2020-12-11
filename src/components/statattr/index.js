@@ -5,10 +5,10 @@ export function StatAttr(props) {
     if (!props.run) {
         return <div>
             <div class={style.legend}>{props.label}</div>
-            <div>0</div>
-            <div>-</div>
-            <div>-</div>
-            <div>-</div>
+            <div class={style.date}>-</div>
+            <div class={style.pace}>-</div>
+            <div class={style.distance}>-</div>
+            <div class={style.duration}>-</div>
         </div>;
     }
 

@@ -4,9 +4,10 @@ import React from "preact/compat";
 import {StatAttr} from "../statattr";
 
 export function BestRuns(props) {
-    const furthestRun = findFurthestRun(props.runs, props.runFilter);
-    const longestRun = findLongestRun(props.runs);
-    const fastestRun = findFastestRun(props.runs);
+    const runCount = props.runs.length;
+    const furthestRun = runCount > 0 ? findFurthestRun(props.runs, props.runFilter) : null;
+    const longestRun = runCount > 0 ? findLongestRun(props.runs) : null;
+    const fastestRun = runCount > 0 ? findFastestRun(props.runs) : null;
 
     return <div class={style.table}>
         <StatAttr
@@ -31,7 +32,7 @@ export function BestRuns(props) {
 }
 
 function getIsActiveClass(run, props) {
-    if (run.date.isSame(props.currentRun.date)) {
+    if (run && run.date.isSame(props.currentRun.date)) {
         return props.graphMode + 'Active'
     }
 

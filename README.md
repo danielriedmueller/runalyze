@@ -3,7 +3,8 @@
 ## CLI Commands
 
 ``` bash
- docker run -dit --name my-apache-app -p 8080:80 -v "$PWD":/usr/local/apache2/htdocs/ httpd:2.4
+docker run -dit --name my-apache-app -p 8080:80 -v "$PWD":/usr/local/apache2/htdocs/ httpd:2.4
+sudo docker run --rm -t -v Runalyze:/var/www/localhost/htdocs -p 8080:8080 sebp/lighttpd
 
 # install dependencies
 npm install

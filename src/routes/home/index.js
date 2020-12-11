@@ -1,26 +1,37 @@
 import style from './style.css';
 import {Component} from "preact";
-import {Table} from "../../components/table";
 import LineChart from "../../components/chart";
 import {BestRuns} from "../../components/bestruns";
+import {YearRuns} from "../../components/yearruns";
+import {WeekRuns} from "../../components/weekruns";
+import {MonthRuns} from "../../components/monthruns";
+import {filterRuns} from "../../helper/functions";
 
 class Home extends Component {
 	render(props) {
 		return <div class={style.home}>
 			<LineChart
-				runs={props.filteredRuns}
+				runs={filterRuns(props.runs, props.runFilter)}
 				changeCurrentRun={props.changeCurrentRun}
 				changeGraphMode={props.changeGraphMode}
 				currentRun={props.currentRun}
 				graphMode={props.graphMode}
 			/>
 			<BestRuns
-				runs={props.filteredRuns}
+				runs={filterRuns(props.runs, props.runFilter)}
 				changeCurrentRun={props.changeCurrentRun}
 				currentRun={props.currentRun}
 				graphMode={props.graphMode}
 			/>
-			<Table
+			<WeekRuns
+				runs={filterRuns(props.runs, {year: props.runFilter.year, month: props.runFilter.month})}
+				changeRunFilter={props.changeRunFilter}
+			/>
+			<MonthRuns
+				runs={filterRuns(props.runs, {year: props.runFilter.year})}
+				changeRunFilter={props.changeRunFilter}
+			/>
+			<YearRuns
 				changeRunFilter={props.changeRunFilter}
 				runs={props.runs}
 			/>
