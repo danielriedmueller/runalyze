@@ -31,6 +31,7 @@
     "fitness-js": "^0.2.2",
     "preact": "^10.5.5",
     "preact-render-to-string": "^5.1.11",
-    "preact-router": "^3.2.1"
+    "preact-router": "^3.2.1",
+    "react-minimal-pie-chart": "^8.1.0"
   }
 }
